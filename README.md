@@ -11,4 +11,4 @@
 ![architecture_v2](https://github.com/user-attachments/assets/fe647c5d-4e18-423a-83d7-c308c1e38238)
 
 # 🧾 ERD
-![ERD_v2](https://github.com/user-attachments/assets/bb1bed4c-9d00-418e-94fc-89016d5eea28)
+![ERD_v2](https://github.com/user-attachments/assets/81920501-51f5-485d-a76b-cc9fef32d7d8)

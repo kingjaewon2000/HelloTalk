@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("jvm")
@@ -41,6 +42,14 @@ subprojects {
     tasks.withType<JavaCompile> {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
+    }
+
+    tasks.withType<BootJar> {
+        enabled = false
+    }
+
+    tasks.withType<Jar> {
+        enabled = true
     }
 
     tasks.withType<KotlinCompile> {

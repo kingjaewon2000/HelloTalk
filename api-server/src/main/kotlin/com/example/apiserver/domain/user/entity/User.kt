@@ -16,5 +16,7 @@ class User(
 
     @Column(nullable = false)
     val password: String,
+
     val name: String
+
 ) : BaseTimeEntity()

@@ -8,4 +8,11 @@ sealed class ApiResponse<out T> {
     data class Success<T>(val status: Int, val data: T) : ApiResponse<T>()
 
     data class Error(val error: RuntimeException) : ApiResponse<Nothing>()
+
+    companion object {
+        fun <T> success(data: T): ApiResponse<T> = Success(200, data)
+
+        fun error(error: RuntimeException): ApiResponse<Nothing> = Error(error)
+    }
+
 }

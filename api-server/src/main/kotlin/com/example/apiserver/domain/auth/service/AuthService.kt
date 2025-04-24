@@ -1,7 +1,7 @@
 package com.example.apiserver.domain.auth.service
 
 import com.example.apiserver.domain.auth.dto.LoginRequest
-import com.example.apiserver.domain.auth.dto.LoginResponse
+import com.example.apiserver.domain.auth.dto.LoginUser
 import com.example.apiserver.domain.user.repository.UserRepository
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
@@ -13,7 +13,7 @@ class AuthService(
     private val userRepository: UserRepository
 ) {
 
-    fun login(request: LoginRequest): LoginResponse {
+    fun login(request: LoginRequest): LoginUser {
         val user = userRepository.findByUsername(request.username)
             ?: throw ApiException(ErrorCode.UNAUTHORIZED)
 
@@ -21,7 +21,7 @@ class AuthService(
             throw ApiException(ErrorCode.UNAUTHORIZED)
         }
 
-        return LoginResponse(user.id)
+        return LoginUser(user.id, user.username)
     }
 
     private fun passwordMatches(

@@ -2,8 +2,9 @@ package com.example.apiserver.domain.auth.controller
 
 import com.example.apiserver.domain.auth.dto.LoginRequest
 import com.example.apiserver.domain.auth.service.AuthService
-import com.example.apiserver.global.extension.set
+import com.example.apiserver.global.session.set
 import com.example.apiserver.global.session.SessionConstants.Companion.SESSION_NAME
+import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -31,8 +32,9 @@ class AuthController(
     }
 
     @PostMapping("/logout")
-    fun logout(session: HttpSession): ResponseEntity<Void> {
-        session.invalidate()
+    fun logout(request: HttpServletRequest): ResponseEntity<Void> {
+        val session = request.getSession(false)
+        session?.invalidate()
 
         return ResponseEntity(HttpStatus.OK)
     }

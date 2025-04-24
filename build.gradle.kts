@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     kotlin("jvm")
     kotlin("plugin.spring") apply false
+    kotlin("plugin.jpa") apply false
     id("org.springframework.boot") apply false
     id("io.spring.dependency-management") apply false
 }
@@ -32,6 +32,7 @@ subprojects {
     apply(plugin = "io.spring.dependency-management")
 
     dependencies {
+        implementation("org.jetbrains.kotlin:kotlin-stdlib")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -40,14 +41,6 @@ subprojects {
     tasks.withType<JavaCompile> {
         sourceCompatibility = javaVersion
         targetCompatibility = javaVersion
-    }
-
-    tasks.withType<BootJar> {
-        enabled = false
-    }
-
-    tasks.withType<Jar> {
-        enabled = true
     }
 
     tasks.withType<KotlinCompile> {
@@ -60,4 +53,5 @@ subprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+
 }

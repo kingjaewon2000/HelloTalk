@@ -7,8 +7,10 @@ import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional(readOnly = true)
 class AuthService(
     private val userRepository: UserRepository
 ) {

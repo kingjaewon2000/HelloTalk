@@ -1,7 +1,9 @@
 package com.example.apiserver.domain.friend.service
 
+import com.example.apiserver.domain.friend.dto.FriendInfoResponse
 import com.example.apiserver.domain.friend.entity.Friend
 import com.example.apiserver.domain.friend.entity.FriendStatus
+import com.example.apiserver.domain.friend.entity.FriendStatus.ACCEPTED
 import com.example.apiserver.domain.friend.repository.FriendRepository
 import com.example.apiserver.domain.user.entity.User
 import com.example.apiserver.domain.user.service.UserService
@@ -16,6 +18,12 @@ class FriendService(
     val friendRepository: FriendRepository,
     val userService: UserService
 ) {
+
+    fun getFriends(userId: Long): List<FriendInfoResponse> {
+        return friendRepository.findAllByFromUserId(userId, ACCEPTED)
+            .map { FriendInfoResponse(it.id, it.toUser.id, it.toUser.username, it.toUser.name, it.status.toString()) }
+            .toList()
+    }
 
     @Transactional
     fun addFriend(fromUserId: Long, toUsername: String) {
@@ -39,7 +47,7 @@ class FriendService(
             fromUser = fromUser,
             toUser = toUser,
             requesterUser = fromUser,
-            status = FriendStatus.ACCEPTED
+            status = ACCEPTED
         )
 
         val requested = Friend(

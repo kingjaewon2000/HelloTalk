@@ -1,8 +1,11 @@
-package com.example.apiserver.domain.friendship.controller
+package com.example.apiserver.domain.friend.controller
 
-import com.example.apiserver.domain.friendship.service.FriendService
-import org.springframework.web.bind.annotation.GetMapping
+import com.example.apiserver.domain.auth.dto.LoginUser
+import com.example.apiserver.domain.friend.dto.FriendAddRequest
+import com.example.apiserver.domain.friend.service.FriendService
+import com.example.apiserver.global.session.Login
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -12,14 +15,12 @@ class FriendController(
     val friendService: FriendService
 ) {
 
-    @GetMapping
-    fun getFriends() {
-        friendService.getFriends()
-    }
-
     @PostMapping
-    fun addFriend() {
-        friendService.addFriend()
+    fun addFriend(
+        @Login auth: LoginUser,
+        @RequestBody request: FriendAddRequest
+    ) {
+        friendService.addFriend(auth.id, request.toUsername)
     }
 
 }

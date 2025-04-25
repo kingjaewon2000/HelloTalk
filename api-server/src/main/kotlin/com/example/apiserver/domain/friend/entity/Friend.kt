@@ -1,5 +1,6 @@
 package com.example.apiserver.domain.friend.entity
 
+import com.example.apiserver.domain.user.entity.User
 import com.example.apiserver.global.audit.BaseTimeEntity
 import jakarta.persistence.*
 
@@ -8,19 +9,22 @@ import jakarta.persistence.*
 class Friend(
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L,
 
-    @Column(nullable = false)
-    val fromUserID: Long,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "from_user_id", nullable = false)
+    val fromUser: User,
 
-    @Column(nullable = false)
-    val toUserId: Long,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "to_user_id", nullable = false)
+    val toUser: User,
 
-    @Column(nullable = false)
-    val requesterUserId: Long,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "requester_user_id", nullable = false)
+    val requesterUser: User,
 
     @Enumerated(EnumType.STRING)
     val status: FriendStatus,
 
-) : BaseTimeEntity()
+    ) : BaseTimeEntity()

@@ -13,7 +13,13 @@ import org.springframework.transaction.annotation.Transactional
 class UserService(
     private val userRepository: UserRepository
 ) {
-    
+
+    fun findByIdOrThrow(id: Long) =
+        userRepository.findUserById(id) ?: throw ApiException(ErrorCode.USER_NOT_FOUND)
+
+    fun findByUsernameOrThrow(username: String) =
+        userRepository.findByUsername(username) ?: throw ApiException(ErrorCode.USER_NOT_FOUND)
+
     @Transactional
     fun createUser(request: UserCreateRequest): MemberIdResponse {
         if (userRepository.existsByUsername(request.username)) {

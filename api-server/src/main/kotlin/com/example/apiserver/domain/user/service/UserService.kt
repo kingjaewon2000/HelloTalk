@@ -14,10 +14,10 @@ class UserService(
     private val userRepository: UserRepository
 ) {
 
-    fun getByUserId(id: Long) =
+    fun findByIdOrThrow(id: Long) =
         userRepository.findUserById(id) ?: throw ApiException(ErrorCode.USER_NOT_FOUND)
 
-    fun getByUsername(username: String) =
+    fun findByUsernameOrThrow(username: String) =
         userRepository.findByUsername(username) ?: throw ApiException(ErrorCode.USER_NOT_FOUND)
 
     @Transactional

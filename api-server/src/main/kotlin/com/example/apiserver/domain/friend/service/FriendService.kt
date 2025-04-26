@@ -49,8 +49,8 @@ class FriendService(
 
     @Transactional
     fun addFriend(fromUserId: Long, toUsername: String) {
-        val fromUser = userService.getByUserId(fromUserId)
-        val toUser = userService.getByUsername(toUsername)
+        val fromUser = userService.findByIdOrThrow(fromUserId)
+        val toUser = userService.findByUsernameOrThrow(toUsername)
 
         // 자기 자신을 친구 추가 시 예외
         if (isSameUser(fromUser.id, toUser.id)) throw ApiException(ErrorCode.NOT_ALLOW_SELF_ADD_FRIEND)

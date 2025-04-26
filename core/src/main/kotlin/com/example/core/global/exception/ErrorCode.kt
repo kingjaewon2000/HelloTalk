@@ -12,6 +12,7 @@ enum class ErrorCode(val status: Int, val message: String) {
 
     // 공통 에러
     BAD_REQUEST(400, "잘못된 요청 파라미터입니다."),
+    UN_SUPPORTED_OPERATION(400, "지원하지 않는 작업입니다."),
     NOT_FOUND(404, "요청하신 리소스를 찾을 수 없습니다."),
     INTERNAL_SERVER_ERROR(500, "서버 내부에 오류가 발생했습니다."),
 

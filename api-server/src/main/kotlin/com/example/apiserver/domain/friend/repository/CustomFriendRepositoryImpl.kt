@@ -1,0 +1,71 @@
+package com.example.apiserver.domain.friend.repository
+
+import com.example.apiserver.domain.friend.dto.FriendInfoResponse
+import com.example.apiserver.domain.friend.entity.Friend
+import com.example.apiserver.domain.friend.entity.FriendStatus
+import com.example.apiserver.domain.user.entity.User
+import com.example.core.global.common.CursorInfo
+import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
+import com.linecorp.kotlinjdsl.dsl.jpql.jpql
+import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicate
+import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
+import com.linecorp.kotlinjdsl.support.spring.data.jpa.extension.createQuery
+import jakarta.persistence.EntityManager
+
+class CustomFriendRepositoryImpl(
+    private val context: JpqlRenderContext,
+    private val entityManager: EntityManager
+) : CustomFriendRepository {
+
+    companion object {
+        const val NEXT_PAGE = 1
+    }
+
+    override fun findAllByFromUserId(
+        userId: Long,
+        status: FriendStatus,
+        cursorInfo: CursorInfo?,
+        limit: Int
+    ): MutableList<FriendInfoResponse> {
+        val query = jpql {
+            selectNew<FriendInfoResponse>(
+                path(Friend::id),
+                path(Friend::toUser)(User::id),
+                path(Friend::toUser)(User::username),
+                path(Friend::toUser)(User::name),
+                path(Friend::status)
+            ).from(
+                entity(Friend::class),
+                innerJoin(Friend::toUser)
+            ).where(
+                and(
+                    path(Friend::fromUser)(User::id).eq(userId),
+                    path(Friend::status).eq(status),
+                    cursorCondition(cursorInfo)
+                )
+            ).orderBy(
+                path(Friend::toUser)(User::name).asc(),
+                path(Friend::toUser)(User::id).asc()
+            )
+        }
+
+        return entityManager.createQuery(query, context)
+            .setMaxResults(limit + NEXT_PAGE)
+            .resultList
+    }
+
+    private fun Jpql.cursorCondition(
+        cursorInfo: CursorInfo?
+    ): Predicate? {
+        if (cursorInfo == null) return null
+
+        val (name, userId) = cursorInfo
+
+        return path(Friend::toUser)(User::name).gt(name).or(
+            path(Friend::toUser)(User::name).eq(name).and(
+                path(Friend::toUser)(User::id).gt(userId?.toLong())
+            )
+        )
+    }
+
+}

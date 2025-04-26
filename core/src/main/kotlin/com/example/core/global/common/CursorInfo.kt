@@ -1,0 +1,41 @@
+package com.example.core.global.common
+
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
+
+/*
+ * 커서 기반 페이징을 위한 커서 정보를 담는 클래
+ * 정렬 기준 키 값들을 순서대로 저장합니다.
+ */
+class CursorInfo private constructor(
+    private val values: List<String>
+) {
+
+    operator fun component1(): String? = this.values.getOrNull(0)
+    operator fun component2(): String? = this.values.getOrNull(1)
+    operator fun component3(): String? = this.values.getOrNull(2)
+    operator fun component4(): String? = this.values.getOrNull(3)
+    operator fun component5(): String? = this.values.getOrNull(4)
+
+    companion object {
+        const val DELIMITER = "_"
+        private const val MAX_SIZE = 5
+
+        fun decode(cursorId: String?, expectedKeyCount: Int? = null): CursorInfo? {
+            if (cursorId.isNullOrBlank()) return null
+
+            return try {
+                val parts = cursorId.split(DELIMITER)
+
+                if (parts.size > MAX_SIZE) throw ApiException(ErrorCode.BAD_REQUEST)
+
+                if (expectedKeyCount != null && parts.size != expectedKeyCount) return null
+
+                CursorInfo(parts)
+            } catch (e: Exception) {
+                throw ApiException(ErrorCode.BAD_REQUEST)
+            }
+        }
+    }
+
+}

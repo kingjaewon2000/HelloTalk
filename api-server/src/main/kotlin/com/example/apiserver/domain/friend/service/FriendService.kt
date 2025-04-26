@@ -3,10 +3,13 @@ package com.example.apiserver.domain.friend.service
 import com.example.apiserver.domain.friend.dto.FriendInfoResponse
 import com.example.apiserver.domain.friend.entity.Friend
 import com.example.apiserver.domain.friend.entity.FriendStatus
-import com.example.apiserver.domain.friend.entity.FriendStatus.ACCEPTED
+import com.example.apiserver.domain.friend.entity.FriendStatus.*
 import com.example.apiserver.domain.friend.repository.FriendRepository
 import com.example.apiserver.domain.user.entity.User
 import com.example.apiserver.domain.user.service.UserService
+import com.example.core.global.api.ApiCursorResponse
+import com.example.core.global.common.CursorInfo
+import com.example.core.global.common.CursorInfo.Companion.DELIMITER
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import org.springframework.stereotype.Service
@@ -19,10 +22,24 @@ class FriendService(
     val userService: UserService
 ) {
 
-    fun getFriends(userId: Long): List<FriendInfoResponse> {
-        return friendRepository.findAllByFromUserId(userId, ACCEPTED)
-            .map { FriendInfoResponse(it.id, it.toUser.id, it.toUser.username, it.toUser.name, it.status.toString()) }
-            .toList()
+    companion object {
+        private const val PAGE_SIZE = 20
+        private const val CURSOR_KEY_SIZE = 2
+    }
+
+    fun getFriends(userId: Long, status: FriendStatus, cursorId: String?): ApiCursorResponse<FriendInfoResponse> {
+        // 조회 상태 검사(PENDING, ACCEPTED, BLOCKED) 지원
+        validateStatus(status)
+
+        val cursorInfo = CursorInfo.decode(cursorId, CURSOR_KEY_SIZE)
+        val response = friendRepository.findAllByFromUserId(userId, status, cursorInfo, PAGE_SIZE)
+        val nextCursor = createNextCursorId(response)
+
+        return ApiCursorResponse(
+            hasNext = nextCursor.first,
+            cursorId = nextCursor.second,
+            data = response
+        )
     }
 
     @Transactional
@@ -42,6 +59,26 @@ class FriendService(
         friendRepository.saveAll(requester)
     }
 
+    private fun validateStatus(status: FriendStatus) =
+        when (status) {
+            PENDING -> status
+            ACCEPTED -> status
+            BLOCKED -> status
+            else -> throw ApiException(ErrorCode.UN_SUPPORTED_OPERATION)
+        }
+
+    private fun createNextCursorId(friends: MutableList<FriendInfoResponse>): Pair<Boolean, String?> {
+        if (friends.isEmpty() || friends.size <= PAGE_SIZE) return Pair(false, null)
+
+        friends.removeLast()
+
+        val tailName = friends[friends.size - 1].name
+        val tailUserId = friends[friends.size - 1].userId
+        val cursorId = "${tailName}${DELIMITER}${tailUserId}"
+
+        return Pair(true, cursorId)
+    }
+
     private fun createFriendship(fromUser: User, toUser: User): List<Friend> {
         val requester = Friend(
             fromUser = fromUser,
@@ -54,7 +91,7 @@ class FriendService(
             fromUser = toUser,
             toUser = fromUser,
             requesterUser = fromUser,
-            status = FriendStatus.PENDING
+            status = PENDING
         )
 
         return listOf(requester, requested)

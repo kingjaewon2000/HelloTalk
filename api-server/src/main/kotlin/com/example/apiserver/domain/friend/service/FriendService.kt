@@ -27,12 +27,17 @@ class FriendService(
         private const val CURSOR_KEY_SIZE = 2
     }
 
-    fun getFriends(userId: Long, status: FriendStatus, cursorId: String?): ApiCursorResponse<FriendInfoResponse> {
+    fun findByIdOrThrow(friendId: Long): Friend {
+        return friendRepository.findFriendById(friendId)
+            ?: throw ApiException(ErrorCode.UN_SUPPORTED_OPERATION)
+    }
+
+    fun getFriends(loginUserId: Long, status: FriendStatus, cursorId: String?): ApiCursorResponse<FriendInfoResponse> {
         // 조회 상태 검사(PENDING, ACCEPTED, BLOCKED) 지원
         validateStatus(status)
 
         val cursorInfo = CursorInfo.decode(cursorId, CURSOR_KEY_SIZE)
-        val response = friendRepository.findAllByFromUserId(userId, status, cursorInfo, PAGE_SIZE)
+        val response = friendRepository.findAllByFromUserId(loginUserId, status, cursorInfo, PAGE_SIZE)
         val nextCursor = createNextCursorId(response)
 
         return ApiCursorResponse(
@@ -59,6 +64,39 @@ class FriendService(
         friendRepository.saveAll(requester)
     }
 
+    @Transactional
+    fun acceptFriend(loginUserId: Long, friendId: Long) {
+        updateFriendStatus(
+            loginUserId = loginUserId,
+            friendId = friendId,
+            targetStatus = ACCEPTED,
+            expectedStatus = setOf(PENDING)
+        )
+    }
+
+    @Transactional
+    fun rejectFriend(loginUserId: Long, friendId: Long) {
+        updateFriendStatus(
+            loginUserId = loginUserId,
+            friendId = friendId,
+            targetStatus = REJECTED,
+            expectedStatus = setOf(PENDING)
+        )
+    }
+
+    @Transactional
+    fun blockFriend(loginUserId: Long, friendId: Long) {
+        updateFriendStatus(
+            loginUserId = loginUserId,
+            friendId = friendId,
+            targetStatus = BLOCKED,
+            expectedStatus = setOf(PENDING, ACCEPTED)
+        )
+    }
+
+    /*
+     * 내부 메서드
+     */
     private fun validateStatus(status: FriendStatus) =
         when (status) {
             PENDING -> status
@@ -104,5 +142,29 @@ class FriendService(
     private fun isFriendExists(fromUserId: Long, toUserId: Long): Boolean {
         return friendRepository.existsByFromUserIdAndToUserId(fromUserId, toUserId)
     }
+
+    private fun updateFriendStatus(
+        loginUserId: Long,
+        friendId: Long,
+        targetStatus: FriendStatus,
+        expectedStatus: Set<FriendStatus>
+    ) {
+        val friend = findByIdOrThrow(friendId)
+
+        if (isDifferentUser(loginUserId, friend.fromUser.id)) {
+            throw ApiException(ErrorCode.UN_SUPPORTED_OPERATION)
+        }
+
+        if (friend.status == targetStatus) return
+
+        if (friend.status !in expectedStatus) {
+            throw ApiException(ErrorCode.UN_SUPPORTED_OPERATION)
+        }
+
+        friend.status = targetStatus
+    }
+
+    private fun isDifferentUser(loginUserId: Long, fromUserId: Long) =
+        !isSameUser(loginUserId, fromUserId)
 
 }

@@ -25,6 +25,6 @@ class Friend(
     val requesterUser: User,
 
     @Enumerated(EnumType.STRING)
-    val status: FriendStatus,
+    var status: FriendStatus
 
-    ) : BaseTimeEntity()
+) : BaseTimeEntity()

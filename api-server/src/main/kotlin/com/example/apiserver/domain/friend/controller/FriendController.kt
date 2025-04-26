@@ -40,4 +40,40 @@ class FriendController(
             .build()
     }
 
+    @PatchMapping("/{friendId}/accept")
+    fun acceptFriend(
+        @Login auth: LoginUser,
+        @PathVariable friendId: Long
+    ): ResponseEntity<Void> {
+        friendService.acceptFriend(auth.id, friendId)
+
+        return ResponseEntity
+            .ok()
+            .build()
+    }
+
+    @PatchMapping("/{friendId}/reject")
+    fun rejectFriend(
+        @Login auth: LoginUser,
+        @PathVariable friendId: Long
+    ): ResponseEntity<Void> {
+        friendService.rejectFriend(auth.id, friendId)
+
+        return ResponseEntity
+            .ok()
+            .build()
+    }
+
+    @PatchMapping("/{friendId}/block")
+    fun blockFriend(
+        @Login auth: LoginUser,
+        @PathVariable friendId: Long
+    ): ResponseEntity<Void> {
+        friendService.blockFriend(auth.id, friendId)
+
+        return ResponseEntity
+            .ok()
+            .build()
+    }
+
 }

@@ -6,5 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface FriendRepository : JpaRepository<Friend, Long>, CustomFriendRepository {
 
     fun existsByFromUserIdAndToUserId(fromUserId: Long, toUserId: Long): Boolean
+    fun findFriendById(friendId: Long): Friend?
 
 }

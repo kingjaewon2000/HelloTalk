@@ -1,9 +1,9 @@
-package com.example.apiserver.domain.auth.dto
+package com.example.core.domain.auth.domain
 
 import java.io.Serializable
 
 data class LoginUser(
-    val id: Long,
+    val userId: Long,
     val username: String
 ) : Serializable {
 

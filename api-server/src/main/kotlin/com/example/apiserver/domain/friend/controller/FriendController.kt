@@ -1,12 +1,12 @@
 package com.example.apiserver.domain.friend.controller
 
-import com.example.apiserver.domain.auth.dto.LoginUser
 import com.example.apiserver.domain.friend.dto.FriendAddRequest
 import com.example.apiserver.domain.friend.dto.FriendInfoResponse
 import com.example.apiserver.domain.friend.entity.FriendStatus
 import com.example.apiserver.domain.friend.entity.FriendStatus.ACCEPTED
 import com.example.apiserver.domain.friend.service.FriendService
 import com.example.apiserver.global.session.Login
+import com.example.core.domain.auth.domain.LoginUser
 import com.example.core.global.api.ApiCursorResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -25,7 +25,7 @@ class FriendController(
     ): ResponseEntity<ApiCursorResponse<FriendInfoResponse>> {
         return ResponseEntity
             .ok()
-            .body(friendService.getFriends(auth.id, status, cursorId))
+            .body(friendService.getFriends(auth.userId, status, cursorId))
     }
 
     @PostMapping
@@ -33,7 +33,7 @@ class FriendController(
         @Login auth: LoginUser,
         @RequestBody request: FriendAddRequest
     ): ResponseEntity<Void> {
-        friendService.addFriend(auth.id, request.toUsername)
+        friendService.addFriend(auth.userId, request.toUsername)
 
         return ResponseEntity
             .ok()
@@ -45,7 +45,7 @@ class FriendController(
         @Login auth: LoginUser,
         @PathVariable friendId: Long
     ): ResponseEntity<Void> {
-        friendService.acceptFriend(auth.id, friendId)
+        friendService.acceptFriend(auth.userId, friendId)
 
         return ResponseEntity
             .ok()
@@ -57,7 +57,7 @@ class FriendController(
         @Login auth: LoginUser,
         @PathVariable friendId: Long
     ): ResponseEntity<Void> {
-        friendService.rejectFriend(auth.id, friendId)
+        friendService.rejectFriend(auth.userId, friendId)
 
         return ResponseEntity
             .ok()
@@ -69,7 +69,7 @@ class FriendController(
         @Login auth: LoginUser,
         @PathVariable friendId: Long
     ): ResponseEntity<Void> {
-        friendService.blockFriend(auth.id, friendId)
+        friendService.blockFriend(auth.userId, friendId)
 
         return ResponseEntity
             .ok()

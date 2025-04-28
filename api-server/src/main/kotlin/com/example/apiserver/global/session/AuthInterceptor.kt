@@ -1,7 +1,7 @@
 package com.example.apiserver.global.session
 
-import com.example.apiserver.domain.auth.dto.LoginUser
 import com.example.apiserver.global.session.SessionConstants.Companion.SESSION_NAME
+import com.example.core.domain.auth.domain.LoginUser
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import jakarta.servlet.http.HttpServletRequest

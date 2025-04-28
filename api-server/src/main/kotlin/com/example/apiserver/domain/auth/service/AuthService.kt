@@ -1,8 +1,8 @@
 package com.example.apiserver.domain.auth.service
 
 import com.example.apiserver.domain.auth.dto.LoginRequest
-import com.example.apiserver.domain.auth.dto.LoginUser
 import com.example.apiserver.domain.user.repository.UserRepository
+import com.example.core.domain.auth.domain.LoginUser
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import org.mindrot.jbcrypt.BCrypt

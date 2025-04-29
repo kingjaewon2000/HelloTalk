@@ -1,4 +1,4 @@
-package com.example.core.global.exception
+package com.example.core.common.exception
 
 enum class ErrorCode(val status: Int, val message: String) {
 

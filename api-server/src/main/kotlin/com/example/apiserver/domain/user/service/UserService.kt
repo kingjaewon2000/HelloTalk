@@ -3,8 +3,8 @@ package com.example.apiserver.domain.user.service
 import com.example.apiserver.domain.user.dto.MemberIdResponse
 import com.example.apiserver.domain.user.dto.UserCreateRequest
 import com.example.apiserver.domain.user.repository.UserRepository
-import com.example.core.global.exception.ApiException
-import com.example.core.global.exception.ErrorCode
+import com.example.core.common.exception.ApiException
+import com.example.core.common.exception.ErrorCode
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

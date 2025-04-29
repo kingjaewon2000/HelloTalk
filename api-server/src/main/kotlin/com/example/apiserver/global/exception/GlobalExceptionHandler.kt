@@ -1,8 +1,8 @@
 package com.example.apiserver.global.exception
 
-import com.example.core.global.api.ApiExceptionResponse
-import com.example.core.global.exception.ApiException
-import com.example.core.global.exception.ErrorCode
+import com.example.core.common.api.ApiExceptionResponse
+import com.example.core.common.exception.ApiException
+import com.example.core.common.exception.ErrorCode
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException

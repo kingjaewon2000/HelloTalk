@@ -1,7 +1,7 @@
-package com.example.core.global.common
+package com.example.core.common.model
 
-import com.example.core.global.exception.ApiException
-import com.example.core.global.exception.ErrorCode
+import com.example.core.common.exception.ApiException
+import com.example.core.common.exception.ErrorCode
 
 /*
  * 커서 기반 페이징을 위한 커서 정보를 담는 클래

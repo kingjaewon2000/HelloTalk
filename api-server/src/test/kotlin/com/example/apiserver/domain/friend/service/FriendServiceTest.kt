@@ -7,9 +7,9 @@ import com.example.apiserver.domain.friend.entity.FriendStatus.*
 import com.example.apiserver.domain.friend.repository.FriendRepository
 import com.example.apiserver.domain.user.entity.User
 import com.example.apiserver.domain.user.service.UserService
-import com.example.core.global.common.CursorInfo
-import com.example.core.global.exception.ApiException
-import com.example.core.global.exception.ErrorCode
+import com.example.core.common.model.CursorInfo
+import com.example.core.common.exception.ApiException
+import com.example.core.common.exception.ErrorCode
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach

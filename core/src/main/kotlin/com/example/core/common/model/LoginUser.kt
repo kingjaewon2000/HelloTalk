@@ -1,4 +1,4 @@
-package com.example.core.domain.auth.domain
+package com.example.core.common.model
 
 import java.io.Serializable
 
@@ -8,7 +8,7 @@ data class LoginUser(
 ) : Serializable {
 
     companion object {
-        private const val serialVersionUID = 1L
+        private const val serialVersionUID = 4L
     }
 
 }

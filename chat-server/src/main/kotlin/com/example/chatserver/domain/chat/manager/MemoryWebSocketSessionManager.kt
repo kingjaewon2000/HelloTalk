@@ -1,12 +1,10 @@
 package com.example.chatserver.domain.chat.manager
 
-import com.example.chatserver.global.config.RedisConstants.Companion.USER_INSTANCE_MAP_KEY
-import com.example.core.domain.auth.domain.LoginUser
-import com.example.core.global.exception.ApiException
-import com.example.core.global.exception.ErrorCode
+import com.example.core.common.model.LoginUser
+import com.example.core.common.exception.ApiException
+import com.example.core.common.exception.ErrorCode
 import jakarta.annotation.PreDestroy
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.WebSocketSession
@@ -14,30 +12,35 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class MemoryWebSocketSessionManager(
-    private val redisTemplate: StringRedisTemplate
+    private val userConnectionRegistry: UserConnectionRegistry,
 ) : WebSocketSessionManager {
 
     @Value("\${server.instanceId}")
     private lateinit var instanceId: String
 
+    // key: userId value: sessionId
     private val userSessionMap: ConcurrentHashMap<String, MutableSet<String>> = ConcurrentHashMap()
-    private val sessions: ConcurrentHashMap<String, WebSocketSession> = ConcurrentHashMap()
+
+    // key: sessionId value: session
+    private val sessionMap: ConcurrentHashMap<String, WebSocketSession> = ConcurrentHashMap()
 
     override fun registerSession(userId: String, session: WebSocketSession): Boolean {
-        val userSession = userSessionMap.getOrDefault(userId, mutableSetOf())
+        val userSession = userSessionMap.getOrPut(userId) {
+            mutableSetOf()
+        }
         val sessionId = session.id
 
         if (userSession.contains(sessionId)) {
             userSession.remove(sessionId)
-            val oldSession = sessions.remove(sessionId)
+            val oldSession = sessionMap.remove(sessionId)
             closeSession(oldSession, CloseStatus.POLICY_VIOLATION.withReason("New connection established"))
         }
 
         userSession.add(sessionId)
-        sessions[sessionId] = session
+        sessionMap[sessionId] = session
 
         try {
-            redisTemplate.opsForHash<String, String>().put(USER_INSTANCE_MAP_KEY, userId, instanceId)
+            userConnectionRegistry.addUserConnection(userId, instanceId)
         } catch (e: Exception) {
             throw ApiException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
@@ -48,18 +51,14 @@ class MemoryWebSocketSessionManager(
     override fun removeSession(session: WebSocketSession) {
         val sessionId = session.id
         val loginUser = session.attributes["LOGIN_USER"] as? LoginUser
-        val userId = loginUser?.userId as String?
+        val userId = loginUser?.userId.toString()
 
-        sessions.remove(sessionId)
-
-        if (userId == null) {
-            return
-        }
+        sessionMap.remove(sessionId)
 
         userSessionMap[sessionId]?.remove(userId)
 
         try {
-            redisTemplate.opsForHash<String, String>().delete(USER_INSTANCE_MAP_KEY, userId)
+            userConnectionRegistry.removeUserConnection(userId, instanceId)
         } catch (e: Exception) {
             throw ApiException(ErrorCode.INTERNAL_SERVER_ERROR)
         }
@@ -73,24 +72,18 @@ class MemoryWebSocketSessionManager(
 
         if (userIds.isNotEmpty()) {
             try {
-                val redisMap = redisTemplate.opsForHash<String, String>().entries(USER_INSTANCE_MAP_KEY)
-
-                val deleteEntries = redisMap.filter { (userId, mappedInstanceId) ->
-                    mappedInstanceId == instanceId && userId in userIds
-                }.map { it.key }
-
-                redisTemplate.opsForHash<String, String>().delete(USER_INSTANCE_MAP_KEY, deleteEntries.toTypedArray())
+                userConnectionRegistry.cleanup(userIds)
             } catch (e: Exception) {
                 throw ApiException(ErrorCode.INTERNAL_SERVER_ERROR)
             }
         }
 
-        sessions.values.forEach {
+        sessionMap.values.forEach {
             closeSession(it, CloseStatus.GOING_AWAY)
         }
 
         userSessionMap.clear()
-        sessions.clear()
+        sessionMap.clear()
     }
 
     private fun closeSession(session: WebSocketSession?, closeStatus: CloseStatus) {
@@ -103,6 +96,13 @@ class MemoryWebSocketSessionManager(
                 throw ApiException(ErrorCode.INTERNAL_SERVER_ERROR)
             }
         }
+    }
+
+    override fun getSessionsByKey(key: String): List<WebSocketSession> {
+        val sessionIds = userSessionMap[key] ?: throw ApiException(ErrorCode.INTERNAL_SERVER_ERROR)
+        val sessions = sessionIds.mapNotNull { sessionMap[it] }.toList()
+
+        return sessions
     }
 
 }

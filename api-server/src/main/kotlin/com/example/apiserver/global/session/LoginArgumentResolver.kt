@@ -1,7 +1,7 @@
 package com.example.apiserver.global.session
 
 import com.example.apiserver.global.session.SessionConstants.Companion.SESSION_NAME
-import com.example.core.domain.auth.domain.LoginUser
+import com.example.core.common.model.LoginUser
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory

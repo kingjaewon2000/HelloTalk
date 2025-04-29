@@ -6,8 +6,8 @@ import com.example.apiserver.domain.friend.entity.FriendStatus
 import com.example.apiserver.domain.friend.entity.FriendStatus.ACCEPTED
 import com.example.apiserver.domain.friend.service.FriendService
 import com.example.apiserver.global.session.Login
-import com.example.core.domain.auth.domain.LoginUser
-import com.example.core.global.api.ApiCursorResponse
+import com.example.core.common.model.LoginUser
+import com.example.core.common.api.ApiCursorResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

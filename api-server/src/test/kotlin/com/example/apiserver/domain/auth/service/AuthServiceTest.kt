@@ -4,8 +4,8 @@ import com.example.apiserver.domain.auth.dto.LoginRequest
 import com.example.apiserver.domain.user.entity.User
 import com.example.apiserver.domain.user.repository.UserRepository
 import com.example.apiserver.dummy.Dummy.Companion.mockUser
-import com.example.core.global.exception.ApiException
-import com.example.core.global.exception.ErrorCode
+import com.example.core.common.exception.ApiException
+import com.example.core.common.exception.ErrorCode
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeEach
@@ -60,7 +60,7 @@ class AuthServiceTest {
 
         // then
         assertThat(response).isNotNull
-        assertThat(response.id).isEqualTo(user.id)
+        assertThat(response.userId).isEqualTo(user.id)
         assertThat(response.username).isEqualTo(user.username)
     }
 

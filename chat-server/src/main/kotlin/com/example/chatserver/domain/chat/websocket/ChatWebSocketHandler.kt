@@ -1,17 +1,20 @@
 package com.example.chatserver.domain.chat.websocket
 
-import com.example.chatserver.domain.chat.dto.ChatMessage
+import com.example.chatserver.domain.chat.dto.ClientSentMessage
 import com.example.chatserver.domain.chat.manager.WebSocketSessionManager
-import com.example.chatserver.global.config.RedisConstants
-import com.example.core.domain.auth.domain.LoginUser
-import com.example.core.global.exception.ApiException
-import com.example.core.global.exception.ErrorCode
+import com.example.core.common.model.LoginUser
+import com.example.core.common.model.InboundChatMessage
+import com.example.core.common.constant.RedisConstants
+import com.example.core.common.exception.ApiException
+import com.example.core.common.exception.ErrorCode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.data.redis.connection.stream.MapRecord
 import org.springframework.data.redis.connection.stream.RecordId
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
+import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
@@ -33,13 +36,15 @@ class ChatWebSocketHandler(
 
     override fun handleMessage(session: WebSocketSession, message: WebSocketMessage<*>) {
         val loginUser = session.attributes["LOGIN_USER"] as? LoginUser ?: throw ApiException(ErrorCode.UNAUTHORIZED)
-        val userId = loginUser.userId.toString()
+        val senderUserId = loginUser.userId
 
         val payload = message.payload as String
+        val sentMessage = objectMapper.readValue<ClientSentMessage>(payload)
 
-        val chatMessage = ChatMessage(
-            senderUserId = userId,
-            content = payload,
+        val chatMessage = InboundChatMessage(
+            senderUserId = senderUserId,
+            receiveUserId = sentMessage.receiveUserId,
+            content = sentMessage.content,
         )
 
         val messageJson = objectMapper.writeValueAsString(chatMessage)
@@ -60,6 +65,19 @@ class ChatWebSocketHandler(
 
     override fun handleTransportError(session: WebSocketSession, exception: Throwable) {
         afterConnectionClosed(session, CloseStatus.SERVER_ERROR)
+    }
+
+    fun sendMessageToUser(userId: Long, message: String) {
+        val sessions = webSocketSessionManager.getSessionsByKey(userId.toString())
+
+        sessions.forEach { session ->
+            try {
+                val textMessage = TextMessage(message)
+                session.sendMessage(textMessage)
+            } catch (e: Exception) {
+                webSocketSessionManager.removeSession(session)
+            }
+        }
     }
 
 }

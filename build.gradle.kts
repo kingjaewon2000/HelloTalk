@@ -38,6 +38,8 @@ subprojects {
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
         testRuntimeOnly("org.junit.platform:junit-platform-launcher")
         testImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+
+        implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0")
     }
 
     tasks.withType<JavaCompile> {

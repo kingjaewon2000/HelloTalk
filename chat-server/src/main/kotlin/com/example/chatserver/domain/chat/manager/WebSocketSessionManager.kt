@@ -9,4 +9,6 @@ interface WebSocketSessionManager {
 
     fun cleanup()
 
+    fun getSessionsByKey(key: String): List<WebSocketSession>
+
 }

@@ -1,6 +1,6 @@
 package com.example.chatserver.domain.chat.dto
 
-data class ChatMessage(
-    val senderUserId: String,
+data class ClientSentMessage(
+    val receiveUserId: Long,
     val content: String
 )

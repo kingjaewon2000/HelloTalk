@@ -26,6 +26,9 @@ class AuthService(
         return LoginUser(user.id, user.username)
     }
 
+    /*
+     * 내부 메서드
+     */
     private fun passwordMatches(
         rawPassword: String,
         encodedPassword: String

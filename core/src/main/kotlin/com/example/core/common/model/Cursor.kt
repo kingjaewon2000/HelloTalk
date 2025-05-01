@@ -2,6 +2,7 @@ package com.example.core.common.model
 
 import com.example.core.common.exception.ApiException
 import com.example.core.common.exception.ErrorCode
+import com.example.core.common.exception.ErrorCode.UN_SUPPORTED_OPERATION
 
 /*
  * 커서 기반 페이징을 위한 커서 정보를 담는 클래
@@ -11,11 +12,11 @@ class Cursor private constructor(
     private val values: List<String>
 ) {
 
-    operator fun component1(): String? = this.values.getOrNull(0)
-    operator fun component2(): String? = this.values.getOrNull(1)
-    operator fun component3(): String? = this.values.getOrNull(2)
-    operator fun component4(): String? = this.values.getOrNull(3)
-    operator fun component5(): String? = this.values.getOrNull(4)
+    operator fun component1(): String = this.values.getOrNull(0) ?: throw ApiException(UN_SUPPORTED_OPERATION)
+    operator fun component2(): String = this.values.getOrNull(1) ?: throw ApiException(UN_SUPPORTED_OPERATION)
+    operator fun component3(): String = this.values.getOrNull(2) ?: throw ApiException(UN_SUPPORTED_OPERATION)
+    operator fun component4(): String = this.values.getOrNull(3) ?: throw ApiException(UN_SUPPORTED_OPERATION)
+    operator fun component5(): String = this.values.getOrNull(4) ?: throw ApiException(UN_SUPPORTED_OPERATION)
 
     companion object {
         const val DELIMITER = "_"

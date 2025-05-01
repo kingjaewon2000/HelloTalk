@@ -52,8 +52,8 @@ class CustomChatRoomRepositoryImpl(
     ): Predicate? {
         if (cursor == null) return null
 
-        val lastActivityAt = LocalDateTime.parse(cursor.component1()!!)
-        val roomId = cursor.component2()?.toLong()
+        val lastActivityAt = LocalDateTime.parse(cursor.component1())
+        val roomId = cursor.component2().toLong()
 
         return path(ChatRoom::lastActivityAt).lt(lastActivityAt)
             .or(

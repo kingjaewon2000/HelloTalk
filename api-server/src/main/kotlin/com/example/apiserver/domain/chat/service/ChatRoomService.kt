@@ -111,6 +111,9 @@ class ChatRoomService(
         }
     }
 
+    /*
+     * 내부 메서드
+     */
     private fun createChatRoomInternal(
         type: RoomType,
         roomName: String,

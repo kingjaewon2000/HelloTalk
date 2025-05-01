@@ -3,7 +3,7 @@ package com.example.apiserver.domain.chat.repository
 import com.example.apiserver.domain.chat.dto.RoomInfoResponse
 import com.example.apiserver.domain.chat.entity.ChatRoom
 import com.example.apiserver.domain.chat.entity.ChatRoomUser
-import com.example.core.common.model.CursorInfo
+import com.example.core.common.model.Cursor
 import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicate
@@ -21,7 +21,7 @@ class CustomChatRoomRepositoryImpl(
         const val NEXT_PAGE = 1
     }
 
-    override fun findAllByUserId(userId: Long, cursorInfo: CursorInfo?, limit: Int): MutableList<RoomInfoResponse> {
+    override fun findAllByUserId(userId: Long, cursor: Cursor?, limit: Int): MutableList<RoomInfoResponse> {
         val query = jpql {
             selectNew<RoomInfoResponse>(
                 path(ChatRoom::id),
@@ -34,7 +34,7 @@ class CustomChatRoomRepositoryImpl(
             ).where(
                 and(
                     path(ChatRoomUser::userId).eq(userId),
-                    cursorCondition(cursorInfo)
+                    cursorCondition(cursor)
                 )
             ).orderBy(
                 path(ChatRoom::lastActivityAt).desc(),
@@ -48,12 +48,12 @@ class CustomChatRoomRepositoryImpl(
     }
 
     private fun Jpql.cursorCondition(
-        cursorInfo: CursorInfo?
+        cursor: Cursor?
     ): Predicate? {
-        if (cursorInfo == null) return null
+        if (cursor == null) return null
 
-        val lastActivityAt = LocalDateTime.parse(cursorInfo.component1()!!)
-        val roomId = cursorInfo.component2()?.toLong()
+        val lastActivityAt = LocalDateTime.parse(cursor.component1()!!)
+        val roomId = cursor.component2()?.toLong()
 
         return path(ChatRoom::lastActivityAt).lt(lastActivityAt)
             .or(
@@ -62,6 +62,5 @@ class CustomChatRoomRepositoryImpl(
                 )
             )
     }
-
 
 }

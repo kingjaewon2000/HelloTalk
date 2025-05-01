@@ -7,7 +7,7 @@ import com.example.core.common.exception.ErrorCode
  * 커서 기반 페이징을 위한 커서 정보를 담는 클래
  * 정렬 기준 키 값들을 순서대로 저장합니다.
  */
-class CursorInfo private constructor(
+class Cursor private constructor(
     private val values: List<String>
 ) {
 
@@ -21,7 +21,7 @@ class CursorInfo private constructor(
         const val DELIMITER = "_"
         private const val MAX_SIZE = 5
 
-        fun decode(cursorId: String?, expectedKeyCount: Int? = null): CursorInfo? {
+        fun decode(cursorId: String?, expectedKeyCount: Int? = null): Cursor? {
             if (cursorId.isNullOrBlank()) return null
 
             return try {
@@ -31,7 +31,7 @@ class CursorInfo private constructor(
 
                 if (expectedKeyCount != null && parts.size != expectedKeyCount) return null
 
-                CursorInfo(parts)
+                Cursor(parts)
             } catch (e: Exception) {
                 throw ApiException(ErrorCode.BAD_REQUEST)
             }

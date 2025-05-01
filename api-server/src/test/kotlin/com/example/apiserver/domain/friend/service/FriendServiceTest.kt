@@ -7,7 +7,7 @@ import com.example.apiserver.domain.friend.entity.FriendStatus.*
 import com.example.apiserver.domain.friend.repository.FriendRepository
 import com.example.apiserver.domain.user.entity.User
 import com.example.apiserver.domain.user.service.UserService
-import com.example.core.common.model.CursorInfo
+import com.example.core.common.model.Cursor
 import com.example.core.common.exception.ApiException
 import com.example.core.common.exception.ErrorCode
 import org.assertj.core.api.Assertions.assertThat
@@ -80,14 +80,14 @@ class FriendServiceTest {
         val responses = (1..fetchSize).map {
             createFriendInfoResponse(it.toLong(), "테스트 $it", it.toLong(), "test$it", status)
         }
-        val expectedCursorInfo = CursorInfo.decode(cursorId, TEST_CURSOR_KEY_SIZE)
+        val expectedCursor = Cursor.decode(cursorId, TEST_CURSOR_KEY_SIZE)
 
         // when
         whenever(
             friendRepository.findAllByFromUserId(
                 loginUserId,
                 status,
-                expectedCursorInfo,
+                expectedCursor,
                 TEST_PAGE_SIZE
             )
         ).thenReturn(responses.toMutableList())
@@ -115,14 +115,14 @@ class FriendServiceTest {
         val responses = (1..fetchSize).map {
             createFriendInfoResponse(it.toLong(), "테스트 $it", it.toLong(), "test$it", status)
         }
-        val expectedCursorInfo = CursorInfo.decode(cursorId, TEST_CURSOR_KEY_SIZE)
+        val expectedCursor = Cursor.decode(cursorId, TEST_CURSOR_KEY_SIZE)
 
         // when
         whenever(
             friendRepository.findAllByFromUserId(
                 loginUserId,
                 status,
-                expectedCursorInfo,
+                expectedCursor,
                 TEST_PAGE_SIZE
             )
         ).thenReturn(responses.toMutableList())
@@ -143,7 +143,7 @@ class FriendServiceTest {
         val status = ACCEPTED
         val cursorId: String? = null
         val responses = mutableListOf<FriendInfoResponse>()
-        val expectedCursorInfo = CursorInfo.decode(cursorId, TEST_CURSOR_KEY_SIZE)
+        val expectedCursor = Cursor.decode(cursorId, TEST_CURSOR_KEY_SIZE)
 
 
         // when
@@ -151,7 +151,7 @@ class FriendServiceTest {
             friendRepository.findAllByFromUserId(
                 loginUserId,
                 status,
-                expectedCursorInfo,
+                expectedCursor,
                 TEST_PAGE_SIZE
             )
         ).thenReturn(responses.toMutableList())

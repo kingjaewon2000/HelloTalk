@@ -14,8 +14,8 @@ import com.example.apiserver.domain.user.repository.UserRepository
 import com.example.core.common.api.ApiCursorResponse
 import com.example.core.common.exception.ApiException
 import com.example.core.common.exception.ErrorCode
-import com.example.core.common.model.CursorInfo
-import com.example.core.common.model.CursorInfo.Companion.DELIMITER
+import com.example.core.common.model.Cursor
+import com.example.core.common.model.Cursor.Companion.DELIMITER
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -50,9 +50,9 @@ class ChatRoomService(
         )
     }
 
-    fun findAllByUserId(userId: Long, cursorId: String?): ApiCursorResponse<RoomInfoResponse> {
-        val cursorInfo = CursorInfo.decode(cursorId, CURSOR_KEY_SIZE)
-        val response = chatRoomRepository.findAllByUserId(userId, cursorInfo, PAGE_SIZE)
+    fun findAllByUserId(loginUserId: Long, cursorId: String?): ApiCursorResponse<RoomInfoResponse> {
+        val cursor = Cursor.decode(cursorId, CURSOR_KEY_SIZE)
+        val response = chatRoomRepository.findAllByUserId(loginUserId, cursor, PAGE_SIZE)
         val nextCursor = createNextCursorId(response)
 
         return ApiCursorResponse(

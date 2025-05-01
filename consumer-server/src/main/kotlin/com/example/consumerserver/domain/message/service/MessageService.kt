@@ -13,13 +13,13 @@ class MessageService(
 
     @Transactional
     fun saveMessage(chatMessage: InboundChatMessage) {
-        val message = Message(
-            senderUserId = chatMessage.senderUserId,
-            receiveUserId = chatMessage.receiveUserId,
-            content = chatMessage.content,
-        )
+//        val message = Message(
+//            roomId = ,
+//            receiveUserId = chatMessage.receiveUserId,
+//            content = chatMessage.content,
+//        )
 
-        messageRepository.save(message)
+//        messageRepository.save(message)
     }
 
 }

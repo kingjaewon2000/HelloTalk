@@ -2,11 +2,11 @@ package com.example.chatserver.domain.chat.websocket
 
 import com.example.chatserver.domain.chat.dto.ClientSentMessage
 import com.example.chatserver.domain.chat.manager.WebSocketSessionManager
-import com.example.core.common.model.LoginUser
-import com.example.core.common.model.InboundChatMessage
-import com.example.core.common.constant.RedisConstants
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode
+import com.example.core.global.model.LoginUser
+import com.example.core.global.model.InboundChatMessage
+import com.example.core.global.constant.RedisConstants
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.data.redis.connection.stream.MapRecord

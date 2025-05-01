@@ -1,10 +1,10 @@
 package com.example.chatserver.domain.chat.listener
 
 import com.example.chatserver.domain.chat.websocket.ChatWebSocketHandler
-import com.example.core.common.model.OutboundChatMessage
-import com.example.core.common.constant.RedisConstants
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode
+import com.example.core.global.model.OutboundChatMessage
+import com.example.core.global.constant.RedisConstants
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.beans.factory.annotation.Value

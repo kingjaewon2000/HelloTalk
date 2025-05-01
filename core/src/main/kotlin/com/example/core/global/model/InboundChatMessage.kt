@@ -1,4 +1,4 @@
-package com.example.core.common.model
+package com.example.core.global.model
 
 import java.io.Serializable
 

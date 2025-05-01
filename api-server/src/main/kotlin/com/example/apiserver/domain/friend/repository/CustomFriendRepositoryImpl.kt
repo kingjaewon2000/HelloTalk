@@ -4,7 +4,7 @@ import com.example.apiserver.domain.friend.dto.FriendInfoResponse
 import com.example.apiserver.domain.friend.entity.Friend
 import com.example.apiserver.domain.friend.entity.FriendStatus
 import com.example.apiserver.domain.user.entity.User
-import com.example.core.common.model.Cursor
+import com.example.core.global.model.Cursor
 import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicate

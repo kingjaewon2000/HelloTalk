@@ -29,10 +29,14 @@ allprojects {
 
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.springframework.boot")
     apply(plugin = "org.jetbrains.kotlin.plugin.spring")
     apply(plugin = "io.spring.dependency-management")
 
     dependencies {
+        implementation("org.springframework.boot:spring-boot-starter-web")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
+
         implementation("org.jetbrains.kotlin:kotlin-stdlib")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
@@ -47,14 +51,6 @@ subprojects {
         targetCompatibility = javaVersion
     }
 
-    tasks.withType<BootJar> {
-        enabled = false
-    }
-
-    tasks.withType<Jar> {
-        enabled = true
-    }
-
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs = listOf("-Xjsr305=strict")
@@ -66,4 +62,12 @@ subprojects {
         useJUnitPlatform()
     }
 
+}
+
+project(":core") {
+    val jar: Jar by tasks
+    val bootJar: BootJar by tasks
+
+    bootJar.enabled = false
+    jar.enabled = true
 }

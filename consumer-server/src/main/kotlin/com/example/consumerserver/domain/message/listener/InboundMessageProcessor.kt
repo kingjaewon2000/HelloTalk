@@ -4,10 +4,10 @@ import com.example.consumerserver.domain.message.service.MessageService
 import com.example.consumerserver.domain.message.publisher.RedisMessagePublisher
 import com.example.consumerserver.domain.message.repository.UserConnectionRepository
 import com.example.consumerserver.domain.notification.service.NotificationService
-import com.example.core.common.model.InboundChatMessage
-import com.example.core.common.constant.RedisConstants.Companion.INBOUND_STREAM_KEY
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode
+import com.example.core.global.model.InboundChatMessage
+import com.example.core.global.constant.RedisConstants.Companion.INBOUND_STREAM_KEY
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.data.redis.connection.stream.MapRecord

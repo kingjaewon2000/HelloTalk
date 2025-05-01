@@ -1,7 +1,7 @@
 package com.example.chatserver.global.config
 
 import com.example.chatserver.domain.chat.listener.OutboundMessageProcessor
-import com.example.core.common.constant.RedisConstants
+import com.example.core.global.constant.RedisConstants
 import jakarta.annotation.PreDestroy
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean

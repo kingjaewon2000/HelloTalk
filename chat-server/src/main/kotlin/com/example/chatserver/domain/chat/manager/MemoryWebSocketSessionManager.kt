@@ -1,8 +1,8 @@
 package com.example.chatserver.domain.chat.manager
 
-import com.example.core.common.model.LoginUser
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode
+import com.example.core.global.model.LoginUser
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
 import jakarta.annotation.PreDestroy
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

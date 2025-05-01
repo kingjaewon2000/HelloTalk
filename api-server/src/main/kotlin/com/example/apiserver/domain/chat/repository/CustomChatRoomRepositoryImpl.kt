@@ -3,7 +3,7 @@ package com.example.apiserver.domain.chat.repository
 import com.example.apiserver.domain.chat.dto.RoomInfoResponse
 import com.example.apiserver.domain.chat.entity.ChatRoom
 import com.example.apiserver.domain.chat.entity.ChatRoomUser
-import com.example.core.common.model.Cursor
+import com.example.core.global.model.Cursor
 import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicate

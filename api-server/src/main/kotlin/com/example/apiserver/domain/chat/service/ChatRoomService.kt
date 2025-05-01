@@ -11,11 +11,11 @@ import com.example.apiserver.domain.chat.entity.RoomType.GROUP
 import com.example.apiserver.domain.chat.repository.ChatRoomRepository
 import com.example.apiserver.domain.chat.repository.ChatRoomUserRepository
 import com.example.apiserver.domain.user.repository.UserRepository
-import com.example.core.common.api.ApiCursorResponse
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode
-import com.example.core.common.model.Cursor
-import com.example.core.common.model.Cursor.Companion.DELIMITER
+import com.example.core.global.api.ApiCursorResponse
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
+import com.example.core.global.model.Cursor
+import com.example.core.global.model.Cursor.Companion.DELIMITER
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime

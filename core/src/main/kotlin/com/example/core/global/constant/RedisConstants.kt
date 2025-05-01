@@ -1,4 +1,4 @@
-package com.example.core.common.constant
+package com.example.core.global.constant
 
 class RedisConstants {
 

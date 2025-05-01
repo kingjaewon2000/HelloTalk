@@ -1,4 +1,4 @@
-package com.example.core.common.exception
+package com.example.core.global.exception
 
 class ApiException(
     val errorCode: ErrorCode

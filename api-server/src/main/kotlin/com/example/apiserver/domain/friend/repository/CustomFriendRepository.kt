@@ -2,7 +2,7 @@ package com.example.apiserver.domain.friend.repository
 
 import com.example.apiserver.domain.friend.dto.FriendInfoResponse
 import com.example.apiserver.domain.friend.entity.FriendStatus
-import com.example.core.common.model.Cursor
+import com.example.core.global.model.Cursor
 
 interface CustomFriendRepository {
 

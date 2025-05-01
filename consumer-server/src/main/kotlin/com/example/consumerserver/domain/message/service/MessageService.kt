@@ -1,8 +1,7 @@
 package com.example.consumerserver.domain.message.service
 
-import com.example.consumerserver.domain.message.entity.Message
 import com.example.consumerserver.domain.message.repository.MessageRepository
-import com.example.core.common.model.InboundChatMessage
+import com.example.core.global.model.InboundChatMessage
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -14,11 +13,8 @@ class MessageService(
     @Transactional
     fun saveMessage(chatMessage: InboundChatMessage) {
 //        val message = Message(
-//            roomId = ,
-//            receiveUserId = chatMessage.receiveUserId,
-//            content = chatMessage.content,
 //        )
-
+//
 //        messageRepository.save(message)
     }
 

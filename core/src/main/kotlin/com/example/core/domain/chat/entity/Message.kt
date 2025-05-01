@@ -1,4 +1,4 @@
-package com.example.consumerserver.domain.message.entity
+package com.example.core.domain.chat.entity
 
 import jakarta.persistence.*
 import org.springframework.data.jpa.domain.support.AuditingEntityListener

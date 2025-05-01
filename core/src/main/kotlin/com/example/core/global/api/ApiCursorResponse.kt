@@ -1,4 +1,4 @@
-package com.example.core.common.api
+package com.example.core.global.api
 
 /*
  * API 커서 기반 공통 응답

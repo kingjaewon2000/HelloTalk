@@ -1,7 +1,7 @@
 package com.example.consumerserver.domain.notification.service
 
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode.INTERNAL_SERVER_ERROR
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode.INTERNAL_SERVER_ERROR
 import org.springframework.stereotype.Service
 import kotlin.random.Random
 

@@ -2,9 +2,9 @@ package com.example.apiserver.domain.auth.service
 
 import com.example.apiserver.domain.auth.dto.LoginRequest
 import com.example.apiserver.domain.user.repository.UserRepository
-import com.example.core.common.model.LoginUser
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode
+import com.example.core.global.model.LoginUser
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

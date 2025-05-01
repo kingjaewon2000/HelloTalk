@@ -1,8 +1,8 @@
-package com.example.core.common.model
+package com.example.core.global.model
 
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode
-import com.example.core.common.exception.ErrorCode.UN_SUPPORTED_OPERATION
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
+import com.example.core.global.exception.ErrorCode.UN_SUPPORTED_OPERATION
 
 /*
  * 커서 기반 페이징을 위한 커서 정보를 담는 클래

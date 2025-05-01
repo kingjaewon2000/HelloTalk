@@ -1,9 +1,9 @@
 package com.example.apiserver.global.session
 
 import com.example.apiserver.global.session.SessionConstants.Companion.SESSION_NAME
-import com.example.core.common.model.LoginUser
-import com.example.core.common.exception.ApiException
-import com.example.core.common.exception.ErrorCode
+import com.example.core.global.model.LoginUser
+import com.example.core.global.exception.ApiException
+import com.example.core.global.exception.ErrorCode
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.stereotype.Component

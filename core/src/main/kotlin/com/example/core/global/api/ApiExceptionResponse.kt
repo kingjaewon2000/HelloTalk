@@ -1,4 +1,4 @@
-package com.example.core.common.api
+package com.example.core.global.api
 
 /*
  * API 공통 에러 응답

@@ -9,6 +9,10 @@ server:
 spring:
   application:
     name: chat-server
+  datasource:
+    url: jdbc:mysql://localhost:3306/talk?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: root
   data:
     redis:
       host: localhost

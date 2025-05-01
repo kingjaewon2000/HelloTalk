@@ -5,8 +5,8 @@ import com.example.apiserver.domain.chat.dto.GroupRoomCreateRequest
 import com.example.apiserver.domain.chat.dto.RoomInfoResponse
 import com.example.apiserver.domain.chat.service.ChatRoomService
 import com.example.apiserver.global.session.Login
-import com.example.core.common.api.ApiCursorResponse
-import com.example.core.common.model.LoginUser
+import com.example.core.global.api.ApiCursorResponse
+import com.example.core.global.model.LoginUser
 import org.springframework.web.bind.annotation.*
 
 @RestController

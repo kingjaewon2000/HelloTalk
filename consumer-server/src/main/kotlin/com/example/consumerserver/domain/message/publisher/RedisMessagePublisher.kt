@@ -1,6 +1,6 @@
 package com.example.consumerserver.domain.message.publisher
 
-import com.example.core.common.constant.RedisConstants
+import com.example.core.global.constant.RedisConstants
 import org.springframework.data.redis.connection.stream.MapRecord
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Component

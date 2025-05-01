@@ -1,7 +1,8 @@
 package com.example.consumerserver.domain.message.repository
 
-import com.example.consumerserver.domain.message.entity.Message
+import com.example.core.domain.chat.entity.Message
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.stereotype.Repository
 
-interface MessageRepository : JpaRepository<Message, Long> {
-}
+@Repository
+interface MessageRepository : JpaRepository<Message, Long>

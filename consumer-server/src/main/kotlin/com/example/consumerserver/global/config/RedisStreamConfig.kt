@@ -1,7 +1,7 @@
 package com.example.consumerserver.global.config
 
 import com.example.consumerserver.domain.message.listener.InboundMessageProcessor
-import com.example.core.common.constant.RedisConstants
+import com.example.core.global.constant.RedisConstants
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory

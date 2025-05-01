@@ -1,7 +1,7 @@
 package com.example.apiserver.domain.friend.entity
 
 import com.example.apiserver.domain.user.entity.User
-import com.example.apiserver.global.audit.BaseTimeEntity
+import com.example.core.global.entity.BaseTimeEntity
 import jakarta.persistence.*
 
 @Entity

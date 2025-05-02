@@ -1,6 +1,7 @@
 package com.example.core.domain.chat.entity
 
 import jakarta.persistence.*
+import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
@@ -20,5 +21,7 @@ class Message(
 
     val content: String,
 
-    val createdAt: LocalDateTime
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    val createdAt: LocalDateTime = LocalDateTime.now()
 )

@@ -3,8 +3,8 @@ package com.example.core.global.model
 import java.io.Serializable
 
 data class InboundChatMessage(
+    val roomId: Long,
     val senderUserId: Long,
-    val receiveUserId: Long,
     val content: String
 ) : Serializable {
 

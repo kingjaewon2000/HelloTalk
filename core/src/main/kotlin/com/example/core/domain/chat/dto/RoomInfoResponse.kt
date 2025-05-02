@@ -1,6 +1,6 @@
-package com.example.apiserver.domain.chat.dto
+package com.example.core.domain.chat.dto
 
-import com.example.apiserver.domain.chat.entity.RoomType
+import com.example.core.domain.chat.entity.RoomType
 import java.time.LocalDateTime
 
 data class RoomInfoResponse(

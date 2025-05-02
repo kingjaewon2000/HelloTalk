@@ -2,15 +2,15 @@ package com.example.apiserver.domain.chat.service
 
 import com.example.apiserver.domain.chat.dto.DirectRoomCreateRequest
 import com.example.apiserver.domain.chat.dto.GroupRoomCreateRequest
-import com.example.apiserver.domain.chat.dto.RoomInfoResponse
-import com.example.apiserver.domain.chat.entity.ChatRoom
-import com.example.apiserver.domain.chat.entity.ChatRoomUser
-import com.example.apiserver.domain.chat.entity.RoomType
-import com.example.apiserver.domain.chat.entity.RoomType.DIRECT
-import com.example.apiserver.domain.chat.entity.RoomType.GROUP
-import com.example.apiserver.domain.chat.repository.ChatRoomRepository
-import com.example.apiserver.domain.chat.repository.ChatRoomUserRepository
 import com.example.apiserver.domain.user.repository.UserRepository
+import com.example.core.domain.chat.dto.RoomInfoResponse
+import com.example.core.domain.chat.entity.ChatRoom
+import com.example.core.domain.chat.entity.ChatRoomUser
+import com.example.core.domain.chat.entity.RoomType
+import com.example.core.domain.chat.entity.RoomType.DIRECT
+import com.example.core.domain.chat.entity.RoomType.GROUP
+import com.example.core.domain.chat.repository.ChatRoomRepository
+import com.example.core.domain.chat.repository.ChatRoomUserRepository
 import com.example.core.global.api.ApiCursorResponse
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode

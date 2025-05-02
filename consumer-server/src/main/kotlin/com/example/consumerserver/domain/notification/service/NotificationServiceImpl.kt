@@ -12,7 +12,7 @@ class NotificationServiceImpl : NotificationService<String> {
         simulateSendNotification(100, 200)
     }
 
-    override fun sendNotificationToMultiple(userIds: List<Long>, payload: String) {
+    override fun sendNotificationToMultiple(userIds: Set<Long>, payload: String) {
         simulateSendNotification(1000, 2000)
     }
 

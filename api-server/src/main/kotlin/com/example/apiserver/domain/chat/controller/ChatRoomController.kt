@@ -2,7 +2,7 @@ package com.example.apiserver.domain.chat.controller
 
 import com.example.apiserver.domain.chat.dto.DirectRoomCreateRequest
 import com.example.apiserver.domain.chat.dto.GroupRoomCreateRequest
-import com.example.apiserver.domain.chat.dto.RoomInfoResponse
+import com.example.core.domain.chat.dto.RoomInfoResponse
 import com.example.apiserver.domain.chat.service.ChatRoomService
 import com.example.apiserver.global.session.Login
 import com.example.core.global.api.ApiCursorResponse

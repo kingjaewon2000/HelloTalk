@@ -1,4 +1,4 @@
-package com.example.apiserver.domain.chat.entity
+package com.example.core.domain.chat.entity
 
 import jakarta.persistence.*
 import org.springframework.data.annotation.CreatedDate
@@ -6,23 +6,21 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "room_user")
+@Table(name = "rooms")
 @EntityListeners(AuditingEntityListener::class)
-class ChatRoomUser(
-
+class ChatRoom(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0L,
 
-    @Column(nullable = false)
-    val roomId: Long,
+    @Enumerated(EnumType.STRING)
+    val type: RoomType,
 
-    @Column(nullable = false)
-    val userId: Long,
+    val name: String,
 
-    val lastReadMessageId: Long? = null,
+    val lastActivityAt: LocalDateTime,
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    val joinedAt: LocalDateTime = LocalDateTime.now(),
+    val createdAt: LocalDateTime = LocalDateTime.now()
 )

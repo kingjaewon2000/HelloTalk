@@ -1,8 +1,8 @@
 package com.example.chatserver.domain.chat.manager
 
-import com.example.core.global.model.LoginUser
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
+import com.example.core.global.model.LoginUser
 import jakarta.annotation.PreDestroy
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
@@ -39,13 +39,7 @@ class MemoryWebSocketSessionManager(
         userSession.add(sessionId)
         sessionMap[sessionId] = session
 
-        try {
-            userConnectionRegistry.addUserConnection(userId, instanceId)
-        } catch (e: Exception) {
-            throw ApiException(ErrorCode.INTERNAL_SERVER_ERROR)
-        }
-
-        return true
+        return userConnectionRegistry.addUserConnection(userId, instanceId)
     }
 
     override fun removeSession(session: WebSocketSession) {
@@ -66,6 +60,18 @@ class MemoryWebSocketSessionManager(
         closeSession(session, CloseStatus.NORMAL)
     }
 
+    private fun closeSession(session: WebSocketSession?, closeStatus: CloseStatus) {
+        session?.let {
+            try {
+                if (it.isOpen) {
+                    it.close(closeStatus)
+                }
+            } catch (e: Exception) {
+                throw ApiException(ErrorCode.INTERNAL_SERVER_ERROR)
+            }
+        }
+    }
+
     @PreDestroy
     override fun cleanup() {
         val userIds = userSessionMap.keys().toList()
@@ -84,18 +90,6 @@ class MemoryWebSocketSessionManager(
 
         userSessionMap.clear()
         sessionMap.clear()
-    }
-
-    private fun closeSession(session: WebSocketSession?, closeStatus: CloseStatus) {
-        session?.let {
-            try {
-                if (it.isOpen) {
-                    it.close(closeStatus)
-                }
-            } catch (e: Exception) {
-                throw ApiException(ErrorCode.INTERNAL_SERVER_ERROR)
-            }
-        }
     }
 
     override fun getSessionsByKey(key: String): List<WebSocketSession> {

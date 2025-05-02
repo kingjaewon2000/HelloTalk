@@ -1,8 +1,8 @@
-package com.example.apiserver.domain.chat.repository
+package com.example.core.domain.chat.repository
 
-import com.example.apiserver.domain.chat.dto.RoomInfoResponse
-import com.example.apiserver.domain.chat.entity.ChatRoom
-import com.example.apiserver.domain.chat.entity.ChatRoomUser
+import com.example.core.domain.chat.dto.RoomInfoResponse
+import com.example.core.domain.chat.entity.ChatRoom
+import com.example.core.domain.chat.entity.ChatRoomUser
 import com.example.core.global.model.Cursor
 import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql

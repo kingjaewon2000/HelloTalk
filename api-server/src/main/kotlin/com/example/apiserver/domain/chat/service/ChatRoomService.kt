@@ -102,6 +102,9 @@ class ChatRoomService(
         )
     }
 
+    /*
+     * 내부 메서드
+     */
     private fun validateUsersExist(userIds: Set<Long>) {
         if (userIds.isEmpty()) throw ApiException(ErrorCode.USER_NOT_FOUND)
 
@@ -111,9 +114,6 @@ class ChatRoomService(
         }
     }
 
-    /*
-     * 내부 메서드
-     */
     private fun createChatRoomInternal(
         type: RoomType,
         roomName: String,
@@ -125,13 +125,13 @@ class ChatRoomService(
             lastActivityAt = LocalDateTime.now()
         )
 
-        chatRoomRepository.save(room)
-        val roomId = room.id
+        val savedRoom = chatRoomRepository.save(room)
+        val roomId = savedRoom.id
 
         val participantUsers = createChatRoomUserEntities(roomId, participantIds)
         chatRoomUserRepository.saveAll(participantUsers)
 
-        return room
+        return savedRoom
     }
 
     private fun createChatRoomUserEntities(roomId: Long, userIds: Set<Long>): List<ChatRoomUser> {

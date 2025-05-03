@@ -1,7 +1,7 @@
 package com.example.apiserver.global.session
 
-import com.example.apiserver.domain.auth.dto.LoginUser
-import com.example.apiserver.global.session.SessionConstants.Companion.SESSION_NAME
+import com.example.core.global.constant.SessionConstants.Companion.LOGIN_USER_ATTRIBUTE
+import com.example.core.global.model.LoginUser
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.support.WebDataBinderFactory
@@ -24,7 +24,7 @@ class LoginArgumentResolver : HandlerMethodArgumentResolver {
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?
     ): Any? {
-        return webRequest.getAttribute(SESSION_NAME, RequestAttributes.SCOPE_REQUEST) as LoginUser
+        return webRequest.getAttribute(LOGIN_USER_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST) as LoginUser
     }
 
 }

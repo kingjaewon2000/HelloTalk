@@ -4,7 +4,7 @@ import com.example.apiserver.domain.friend.dto.FriendInfoResponse
 import com.example.apiserver.domain.friend.entity.Friend
 import com.example.apiserver.domain.friend.entity.FriendStatus
 import com.example.apiserver.domain.user.entity.User
-import com.example.core.global.common.CursorInfo
+import com.example.core.global.model.Cursor
 import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
 import com.linecorp.kotlinjdsl.querymodel.jpql.predicate.Predicate
@@ -24,7 +24,7 @@ class CustomFriendRepositoryImpl(
     override fun findAllByFromUserId(
         userId: Long,
         status: FriendStatus,
-        cursorInfo: CursorInfo?,
+        cursor: Cursor?,
         limit: Int
     ): MutableList<FriendInfoResponse> {
         val query = jpql {
@@ -41,7 +41,7 @@ class CustomFriendRepositoryImpl(
                 and(
                     path(Friend::fromUser)(User::id).eq(userId),
                     path(Friend::status).eq(status),
-                    cursorCondition(cursorInfo)
+                    cursorCondition(cursor)
                 )
             ).orderBy(
                 path(Friend::toUser)(User::name).asc(),
@@ -55,11 +55,11 @@ class CustomFriendRepositoryImpl(
     }
 
     private fun Jpql.cursorCondition(
-        cursorInfo: CursorInfo?
+        cursor: Cursor?
     ): Predicate? {
-        if (cursorInfo == null) return null
+        if (cursor == null) return null
 
-        val (name, userId) = cursorInfo
+        val (name, userId) = cursor
 
         return path(Friend::toUser)(User::name).gt(name).or(
             path(Friend::toUser)(User::name).eq(name).and(

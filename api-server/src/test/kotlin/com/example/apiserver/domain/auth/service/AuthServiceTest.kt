@@ -60,7 +60,7 @@ class AuthServiceTest {
 
         // then
         assertThat(response).isNotNull
-        assertThat(response.id).isEqualTo(user.id)
+        assertThat(response.userId).isEqualTo(user.id)
         assertThat(response.username).isEqualTo(user.username)
     }
 

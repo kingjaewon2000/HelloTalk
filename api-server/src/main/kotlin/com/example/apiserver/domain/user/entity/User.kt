@@ -1,6 +1,6 @@
 package com.example.apiserver.domain.user.entity
 
-import com.example.apiserver.global.audit.BaseTimeEntity
+import com.example.core.global.entity.BaseTimeEntity
 import jakarta.persistence.*
 
 @Entity

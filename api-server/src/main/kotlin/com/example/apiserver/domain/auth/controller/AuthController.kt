@@ -3,7 +3,7 @@ package com.example.apiserver.domain.auth.controller
 import com.example.apiserver.domain.auth.dto.LoginRequest
 import com.example.apiserver.domain.auth.service.AuthService
 import com.example.apiserver.global.session.set
-import com.example.apiserver.global.session.SessionConstants.Companion.SESSION_NAME
+import com.example.core.global.constant.SessionConstants.Companion.LOGIN_USER_ATTRIBUTE
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpSession
 import org.springframework.http.HttpStatus
@@ -26,7 +26,7 @@ class AuthController(
     ): ResponseEntity<Void> {
         val response = authService.login(request)
 
-        session[SESSION_NAME] = response
+        session[LOGIN_USER_ATTRIBUTE] = response
 
         return ResponseEntity(HttpStatus.OK)
     }

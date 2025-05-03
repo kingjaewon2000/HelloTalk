@@ -1,7 +1,7 @@
 package com.example.apiserver.global.session
 
-import com.example.apiserver.domain.auth.dto.LoginUser
-import com.example.apiserver.global.session.SessionConstants.Companion.SESSION_NAME
+import com.example.core.global.constant.SessionConstants.Companion.LOGIN_USER_ATTRIBUTE
+import com.example.core.global.model.LoginUser
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import jakarta.servlet.http.HttpServletRequest
@@ -14,10 +14,10 @@ class AuthInterceptor : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
         val session = request.getSession(false) ?: throw ApiException(ErrorCode.FORBIDDEN)
-        val loginUser = session[SESSION_NAME] ?: throw ApiException(ErrorCode.FORBIDDEN)
+        val loginUser = session[LOGIN_USER_ATTRIBUTE] ?: throw ApiException(ErrorCode.FORBIDDEN)
 
         if (loginUser is LoginUser) {
-            request.setAttribute(SESSION_NAME, loginUser)
+            request.setAttribute(LOGIN_USER_ATTRIBUTE, loginUser)
         } else {
             throw ApiException(ErrorCode.BAD_REQUEST)
         }

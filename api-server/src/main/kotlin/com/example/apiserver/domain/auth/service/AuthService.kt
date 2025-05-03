@@ -1,8 +1,8 @@
 package com.example.apiserver.domain.auth.service
 
 import com.example.apiserver.domain.auth.dto.LoginRequest
-import com.example.apiserver.domain.auth.dto.LoginUser
 import com.example.apiserver.domain.user.repository.UserRepository
+import com.example.core.global.model.LoginUser
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import org.mindrot.jbcrypt.BCrypt
@@ -26,6 +26,9 @@ class AuthService(
         return LoginUser(user.id, user.username)
     }
 
+    /*
+     * 내부 메서드
+     */
     private fun passwordMatches(
         rawPassword: String,
         encodedPassword: String

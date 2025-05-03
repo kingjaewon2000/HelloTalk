@@ -1,4 +1,4 @@
-package com.example.apiserver.global.audit
+package com.example.core.global.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners

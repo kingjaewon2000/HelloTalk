@@ -8,8 +8,8 @@ import com.example.apiserver.domain.friend.repository.FriendRepository
 import com.example.apiserver.domain.user.entity.User
 import com.example.apiserver.domain.user.service.UserService
 import com.example.core.global.api.ApiCursorResponse
-import com.example.core.global.common.CursorInfo
-import com.example.core.global.common.CursorInfo.Companion.DELIMITER
+import com.example.core.global.model.Cursor
+import com.example.core.global.model.Cursor.Companion.DELIMITER
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import org.springframework.stereotype.Service
@@ -36,8 +36,8 @@ class FriendService(
         // 조회 상태 검사(PENDING, ACCEPTED, BLOCKED) 지원
         validateStatus(status)
 
-        val cursorInfo = CursorInfo.decode(cursorId, CURSOR_KEY_SIZE)
-        val response = friendRepository.findAllByFromUserId(loginUserId, status, cursorInfo, PAGE_SIZE)
+        val cursor = Cursor.decode(cursorId, CURSOR_KEY_SIZE)
+        val response = friendRepository.findAllByFromUserId(loginUserId, status, cursor, PAGE_SIZE)
         val nextCursor = createNextCursorId(response)
 
         return ApiCursorResponse(

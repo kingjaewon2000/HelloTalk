@@ -100,7 +100,6 @@ class InboundMessageProcessor(
 
         if (connectedInstanceIds.isEmpty()) {
             sendOfflineNotifications(offlineUserIds)
-            println(offlineUserIds)
         } else {
             publishToOnlineInstances(connectedInstanceIds, outboundMessageJson)
         }

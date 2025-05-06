@@ -13,13 +13,9 @@ spring:
     username: root
     password: root
   jpa:
-    show-sql: true
     open-in-view: false
     hibernate:
       ddl-auto: create
-    properties:
-      hibernate:
-        format_sql: true
   session:
     redis:
       namespace: spring:session

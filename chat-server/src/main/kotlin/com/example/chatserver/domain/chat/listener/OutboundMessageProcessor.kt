@@ -1,6 +1,6 @@
 package com.example.chatserver.domain.chat.listener
 
-import com.example.chatserver.domain.chat.websocket.ChatWebSocketHandler
+import com.example.chatserver.domain.chat.service.MessageService
 import com.example.core.global.constant.RedisConstants
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
 class OutboundMessageProcessor(
     private val objectMapper: ObjectMapper,
     private val redisTemplate: StringRedisTemplate,
-    private val chatWebSocketHandler: ChatWebSocketHandler
+    private val messageService: MessageService
 ) : StreamListener<String, MapRecord<String, String, String>> {
 
     @Value("\${server.instanceId}")
@@ -64,11 +64,9 @@ class OutboundMessageProcessor(
     private fun broadcastMessage(
         outboundMessage: OutboundChatMessage
     ) {
-        outboundMessage.participantIds.forEach { receiveUserId ->
-            chatWebSocketHandler.sendMessageToUser(
-                receiveUserId,
-                outboundMessage.content
-            )
-        }
+        messageService.broadcastMessage(
+            outboundMessage.roomId,
+            outboundMessage.content
+        )
     }
 }

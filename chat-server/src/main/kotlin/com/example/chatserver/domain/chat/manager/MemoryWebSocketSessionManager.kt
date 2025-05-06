@@ -10,7 +10,7 @@ import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.WebSocketSession
 import java.util.concurrent.ConcurrentHashMap
 
-@Component
+//@Component
 class MemoryWebSocketSessionManager(
     private val userConnectionRegistry: UserConnectionRegistry,
 ) : WebSocketSessionManager {

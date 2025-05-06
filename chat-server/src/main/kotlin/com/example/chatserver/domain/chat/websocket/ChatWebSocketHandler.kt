@@ -19,7 +19,7 @@ import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 
-@Component
+//@Component
 class ChatWebSocketHandler(
     private val webSocketSessionManager: WebSocketSessionManager,
     private val redisTemplate: StringRedisTemplate,

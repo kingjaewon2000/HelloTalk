@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component
 class OutboundMessageProcessor(
     private val objectMapper: ObjectMapper,
     private val redisTemplate: StringRedisTemplate,
-    private val chatWebSocketHandler: ChatWebSocketHandler
 ) : StreamListener<String, MapRecord<String, String, String>> {
 
     @Value("\${server.instanceId}")
@@ -65,10 +64,10 @@ class OutboundMessageProcessor(
         outboundMessage: OutboundChatMessage
     ) {
         outboundMessage.participantIds.forEach { receiveUserId ->
-            chatWebSocketHandler.sendMessageToUser(
-                receiveUserId,
-                outboundMessage.content
-            )
+//            chatWebSocketHandler.sendMessageToUser(
+//                receiveUserId,
+//                outboundMessage.content
+//            )
         }
     }
 }

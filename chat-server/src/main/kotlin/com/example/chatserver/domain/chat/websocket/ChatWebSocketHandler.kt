@@ -13,12 +13,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.data.redis.connection.stream.MapRecord
 import org.springframework.data.redis.core.StringRedisTemplate
+import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
 
-//@Component
+@Component
 class ChatWebSocketHandler(
     private val webSocketSessionManager: WebSocketSessionManager,
     private val redisTemplate: StringRedisTemplate,
@@ -57,16 +58,17 @@ class ChatWebSocketHandler(
      */
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
         try {
+            val roomId = 1.toLong()
             val loginUser = getLoginUserFromSession(session)
             val senderUserId = loginUser.userId
 
             val sentMessage = parseClientSentMessage(message.payload)
 
-            if (isNotUserInRoom(sentMessage.roomId, senderUserId)) {
+            if (isNotUserInRoom(roomId, senderUserId)) {
                 throw ApiException(ErrorCode.BAD_REQUEST)
             }
 
-            val inboundMessage = createInboundMessage(senderUserId, sentMessage)
+            val inboundMessage = createInboundMessage(roomId, senderUserId, sentMessage)
             val messageJson = serializeToJson(inboundMessage)
 
             publishMessage(messageJson)
@@ -89,9 +91,9 @@ class ChatWebSocketHandler(
         return !chatRoomUserRepository.existsByRoomIdAndUserId(roomId, senderUserId)
     }
 
-    private fun createInboundMessage(senderUserId: Long, message: ClientSentMessage): InboundChatMessage {
+    private fun createInboundMessage(roomId: Long, senderUserId: Long, message: ClientSentMessage): InboundChatMessage {
         return InboundChatMessage(
-            roomId = message.roomId,
+            roomId = roomId,
             senderUserId = senderUserId,
             content = message.content,
         )

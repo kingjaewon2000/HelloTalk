@@ -1,7 +1,6 @@
 package com.example.chatserver.domain.chat.controller
 
 import com.example.chatserver.domain.chat.dto.ClientSentMessage
-import com.example.chatserver.domain.chat.manager.WebSocketSessionManager
 import com.example.core.domain.chat.repository.ChatRoomUserRepository
 import com.example.core.global.constant.RedisConstants.Companion.INBOUND_STREAM_KEY
 import com.example.core.global.constant.SessionConstants.Companion.LOGIN_USER_ATTRIBUTE
@@ -10,7 +9,6 @@ import com.example.core.global.exception.ErrorCode
 import com.example.core.global.model.InboundChatMessage
 import com.example.core.global.model.LoginUser
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.springframework.data.redis.connection.stream.MapRecord
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.messaging.handler.annotation.DestinationVariable
@@ -60,7 +58,7 @@ class ChatController(
         return !chatRoomUserRepository.existsByRoomIdAndUserId(roomId, senderUserId)
     }
 
-    private fun createInboundMessage(senderUserId: Long, roomId: Long, message: ClientSentMessage): InboundChatMessage {
+    private fun createInboundMessage(roomId: Long, senderUserId: Long, message: ClientSentMessage): InboundChatMessage {
         return InboundChatMessage(
             roomId = roomId,
             senderUserId = senderUserId,

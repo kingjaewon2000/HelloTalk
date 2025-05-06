@@ -1,20 +1,18 @@
 package com.example.chatserver.global.config
 
-import com.example.chatserver.domain.chat.websocket.ChatWebSocketHandler
 import org.springframework.context.annotation.Configuration
-import org.springframework.web.socket.config.annotation.EnableWebSocket
-import org.springframework.web.socket.config.annotation.WebSocketConfigurer
-import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
+import org.springframework.messaging.simp.config.MessageBrokerRegistry
+import org.springframework.web.socket.config.annotation.*
 import org.springframework.web.socket.server.support.HttpSessionHandshakeInterceptor
 
 @Configuration
-@EnableWebSocket
-class WebSocketConfig(private val chatWebSocketHandler: ChatWebSocketHandler) : WebSocketConfigurer {
+@EnableWebSocketMessageBroker
+class WebSocketConfig : WebSocketMessageBrokerConfigurer {
 
-    override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-        registry.addHandler(chatWebSocketHandler, "/ws")
+    override fun registerStompEndpoints(registry: StompEndpointRegistry) {
+        registry.addEndpoint("/ws")
             .setAllowedOrigins("*")
-            .addInterceptors(HttpSessionHandshakeInterceptor())
+
     }
 
 }

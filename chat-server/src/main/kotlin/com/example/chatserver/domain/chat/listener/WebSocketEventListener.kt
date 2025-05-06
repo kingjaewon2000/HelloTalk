@@ -1,6 +1,7 @@
 package com.example.chatserver.domain.chat.listener
 
 import com.example.chatserver.domain.chat.manager.UserConnectionRegistry
+import com.example.chatserver.global.principal.StompPrincipal
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.event.EventListener
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor
@@ -20,22 +21,22 @@ class WebSocketEventListener(
     fun handleSessionConnectEvent(event: SessionConnectEvent) {
         val headerAccessor = StompHeaderAccessor.wrap(event.message)
         val sessionAttributes = headerAccessor.sessionAttributes ?: return
-        val userId = sessionAttributes["userId"].toString()
+        val userId = sessionAttributes["userId"] as Long
+        val username = sessionAttributes["username"] as String
 
-        userConnectionRegistry.addUserConnection(userId, instanceId)
+        val principal = StompPrincipal(userId, username)
+        headerAccessor.user = principal
+
+        userConnectionRegistry.addUserConnection(userId.toString(), instanceId)
     }
 
     @EventListener
     fun handleSessionDisconnectEvent(event: SessionDisconnectEvent) {
         val headerAccessor = StompHeaderAccessor.wrap(event.message)
-        val sessionAttributes = headerAccessor.sessionAttributes ?: return
-        val userId = sessionAttributes["userId"].toString()
+        val user = headerAccessor.user as StompPrincipal
+        val userId = user.userId
 
-        if (userId.isBlank()) {
-            return
-        }
-
-        userConnectionRegistry.removeUserConnection(userId, instanceId)
+        userConnectionRegistry.removeUserConnection(userId.toString(), instanceId)
     }
 
 }

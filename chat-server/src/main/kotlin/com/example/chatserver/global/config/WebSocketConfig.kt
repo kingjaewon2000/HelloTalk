@@ -13,6 +13,10 @@ class WebSocketConfig(
     private val authHandshakeInterceptor: AuthHandshakeInterceptor
 ) : WebSocketMessageBrokerConfigurer {
 
+    companion object {
+        private val HEARTBEAT_INTERVAL = longArrayOf(25000, 25000)
+    }
+
     override fun registerStompEndpoints(registry: StompEndpointRegistry) {
         registry.addEndpoint("/ws")
             .addInterceptors(authHandshakeInterceptor)
@@ -22,6 +26,7 @@ class WebSocketConfig(
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
         registry.setApplicationDestinationPrefixes("/pub")
         registry.enableSimpleBroker("/sub")
+            .setHeartbeatValue(HEARTBEAT_INTERVAL)
     }
 
 }

@@ -1,13 +1,12 @@
 package com.example.chatserver.domain.chat.controller
 
 import com.example.chatserver.domain.chat.dto.ClientSentMessage
+import com.example.chatserver.global.principal.StompPrincipal
 import com.example.core.domain.chat.repository.ChatRoomUserRepository
 import com.example.core.global.constant.RedisConstants.Companion.INBOUND_STREAM_KEY
-import com.example.core.global.constant.SessionConstants.Companion.LOGIN_USER_ATTRIBUTE
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import com.example.core.global.model.InboundChatMessage
-import com.example.core.global.model.LoginUser
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.data.redis.connection.stream.MapRecord
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -16,7 +15,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.Payload
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor
 import org.springframework.stereotype.Controller
-import org.springframework.web.socket.WebSocketSession
 
 @Controller
 class ChatController(
@@ -24,6 +22,10 @@ class ChatController(
     private val objectMapper: ObjectMapper,
     private val chatRoomUserRepository: ChatRoomUserRepository,
 ) {
+
+    companion object {
+        private const val USER_ID: String = "userId"
+    }
 
     @MessageMapping("/rooms/{roomId}")
     fun handleMessage(
@@ -33,7 +35,8 @@ class ChatController(
 
     ) {
         try {
-            val senderUserId = 1.toLong()
+            val sessionAttributes = headerAccessor.sessionAttributes ?: return
+            val senderUserId = sessionAttributes[USER_ID] as Long
 
             if (isNotUserInRoom(roomId, senderUserId)) {
                 throw ApiException(ErrorCode.BAD_REQUEST)
@@ -45,13 +48,6 @@ class ChatController(
             publishMessage(messageJson)
         } catch (_: Exception) {
         }
-    }
-
-    private fun getLoginUserFromSession(session: WebSocketSession): LoginUser {
-        return session.attributes[LOGIN_USER_ATTRIBUTE] as? LoginUser
-            ?: run {
-                throw ApiException(ErrorCode.UNAUTHORIZED)
-            }
     }
 
     private fun isNotUserInRoom(roomId: Long, senderUserId: Long): Boolean {

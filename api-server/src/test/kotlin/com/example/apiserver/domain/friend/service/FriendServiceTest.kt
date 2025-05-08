@@ -1,6 +1,6 @@
 package com.example.apiserver.domain.friend.service
 
-import com.example.apiserver.domain.friend.dto.FriendInfoResponse
+import com.example.apiserver.domain.friend.dto.FriendInfoInitial
 import com.example.apiserver.domain.friend.entity.Friend
 import com.example.apiserver.domain.friend.entity.FriendStatus
 import com.example.apiserver.domain.friend.entity.FriendStatus.*
@@ -20,6 +20,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
+import org.springframework.data.redis.core.StringRedisTemplate
 
 @ExtendWith(MockitoExtension::class)
 class FriendServiceTest {
@@ -32,6 +33,9 @@ class FriendServiceTest {
 
     @Mock
     private lateinit var userService: UserService
+
+    @Mock
+    private lateinit var redisTemplate: StringRedisTemplate
 
     private val userId1 = 1L
     private val userId2 = 2L
@@ -52,8 +56,8 @@ class FriendServiceTest {
         userId: Long,
         username: String,
         status: FriendStatus
-    ): FriendInfoResponse {
-        return FriendInfoResponse(
+    ): FriendInfoInitial {
+        return FriendInfoInitial(
             friendId = id,
             userId = userId,
             username = username,
@@ -142,7 +146,7 @@ class FriendServiceTest {
         val loginUserId = userId1
         val status = ACCEPTED
         val cursorId: String? = null
-        val responses = mutableListOf<FriendInfoResponse>()
+        val responses = mutableListOf<FriendInfoInitial>()
         val expectedCursor = Cursor.decode(cursorId, TEST_CURSOR_KEY_SIZE)
 
 

@@ -1,6 +1,6 @@
 package com.example.apiserver.domain.friend.repository
 
-import com.example.apiserver.domain.friend.dto.FriendInfoResponse
+import com.example.apiserver.domain.friend.dto.FriendInfoInitial
 import com.example.apiserver.domain.friend.entity.Friend
 import com.example.apiserver.domain.friend.entity.FriendStatus
 import com.example.apiserver.domain.user.entity.User
@@ -26,9 +26,9 @@ class CustomFriendRepositoryImpl(
         status: FriendStatus,
         cursor: Cursor?,
         limit: Int
-    ): MutableList<FriendInfoResponse> {
+    ): MutableList<FriendInfoInitial> {
         val query = jpql {
-            selectNew<FriendInfoResponse>(
+            selectNew<FriendInfoInitial>(
                 path(Friend::id),
                 path(Friend::toUser)(User::id),
                 path(Friend::toUser)(User::username),

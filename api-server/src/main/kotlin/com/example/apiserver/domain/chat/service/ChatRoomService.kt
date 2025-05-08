@@ -2,6 +2,7 @@ package com.example.apiserver.domain.chat.service
 
 import com.example.apiserver.domain.chat.dto.DirectRoomCreateRequest
 import com.example.apiserver.domain.chat.dto.GroupRoomCreateRequest
+import com.example.apiserver.domain.chat.dto.ReadMessageRequest
 import com.example.apiserver.domain.user.repository.UserRepository
 import com.example.core.domain.chat.dto.RoomInfoResponse
 import com.example.core.domain.chat.entity.ChatRoom
@@ -11,6 +12,7 @@ import com.example.core.domain.chat.entity.RoomType.DIRECT
 import com.example.core.domain.chat.entity.RoomType.GROUP
 import com.example.core.domain.chat.repository.ChatRoomRepository
 import com.example.core.domain.chat.repository.ChatRoomUserRepository
+import com.example.core.domain.chat.repository.MessageRepository
 import com.example.core.global.api.ApiCursorResponse
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
@@ -26,6 +28,7 @@ import kotlin.jvm.optionals.getOrNull
 class ChatRoomService(
     private val chatRoomRepository: ChatRoomRepository,
     private val chatRoomUserRepository: ChatRoomUserRepository,
+    private val messageRepository: MessageRepository,
     private val userRepository: UserRepository
 ) {
 
@@ -102,6 +105,23 @@ class ChatRoomService(
         )
     }
 
+    @Transactional
+    fun updateReadMessage(loginUserId: Long, roomId: Long, request: ReadMessageRequest) {
+        val roomUser = chatRoomUserRepository.findByUserIdAndRoomId(loginUserId, roomId)
+            ?: throw ApiException(ErrorCode.NOT_FOUND)
+
+        val message = messageRepository.findMessageById(request.messageId)
+            ?: throw ApiException(ErrorCode.NOT_FOUND_MESSAGE)
+
+        roomUser.lastReadMessage?.let { lastReadMessage ->
+            if (lastReadMessage.id >= message.id) {
+                throw ApiException(ErrorCode.ALREADY_READ_MESSAGE)
+            }
+        }
+
+        roomUser.lastReadMessage = message
+    }
+
     /*
      * 내부 메서드
      */
@@ -139,7 +159,7 @@ class ChatRoomService(
             ChatRoomUser(
                 roomId = roomId,
                 userId = userId,
-                lastReadMessageId = null
+                lastReadMessage = null
             )
         }
     }

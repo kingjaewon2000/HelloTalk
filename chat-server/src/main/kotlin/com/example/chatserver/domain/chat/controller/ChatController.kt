@@ -1,7 +1,6 @@
 package com.example.chatserver.domain.chat.controller
 
 import com.example.chatserver.domain.chat.dto.ClientSentMessage
-import com.example.chatserver.global.principal.StompPrincipal
 import com.example.core.domain.chat.repository.ChatRoomUserRepository
 import com.example.core.global.constant.RedisConstants.Companion.INBOUND_STREAM_KEY
 import com.example.core.global.exception.ApiException

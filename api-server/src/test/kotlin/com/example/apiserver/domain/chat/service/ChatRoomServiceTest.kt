@@ -9,6 +9,7 @@ import com.example.core.domain.chat.entity.RoomType
 import com.example.core.domain.chat.entity.RoomType.DIRECT
 import com.example.core.domain.chat.repository.ChatRoomRepository
 import com.example.core.domain.chat.repository.ChatRoomUserRepository
+import com.example.core.domain.chat.repository.MessageRepository
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
 import com.example.core.global.model.Cursor
@@ -36,6 +37,9 @@ class ChatRoomServiceTest {
 
     @Mock
     private lateinit var chatRoomUserRepository: ChatRoomUserRepository
+
+    @Mock
+    private lateinit var messageRepository: MessageRepository
 
     @Mock
     private lateinit var userRepository: UserRepository

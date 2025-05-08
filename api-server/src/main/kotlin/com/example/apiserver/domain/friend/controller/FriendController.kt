@@ -1,6 +1,7 @@
 package com.example.apiserver.domain.friend.controller
 
 import com.example.apiserver.domain.friend.dto.FriendAddRequest
+import com.example.apiserver.domain.friend.dto.FriendInfoInitial
 import com.example.apiserver.domain.friend.dto.FriendInfoResponse
 import com.example.apiserver.domain.friend.entity.FriendStatus
 import com.example.apiserver.domain.friend.entity.FriendStatus.ACCEPTED

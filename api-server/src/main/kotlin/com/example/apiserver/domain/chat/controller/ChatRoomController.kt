@@ -2,9 +2,10 @@ package com.example.apiserver.domain.chat.controller
 
 import com.example.apiserver.domain.chat.dto.DirectRoomCreateRequest
 import com.example.apiserver.domain.chat.dto.GroupRoomCreateRequest
-import com.example.core.domain.chat.dto.RoomInfoResponse
+import com.example.apiserver.domain.chat.dto.ReadMessageRequest
 import com.example.apiserver.domain.chat.service.ChatRoomService
 import com.example.apiserver.global.session.Login
+import com.example.core.domain.chat.dto.RoomInfoResponse
 import com.example.core.global.api.ApiCursorResponse
 import com.example.core.global.model.LoginUser
 import org.springframework.web.bind.annotation.*
@@ -20,7 +21,7 @@ class ChatRoomController(
         @Login auth: LoginUser,
         @PathVariable roomId: Long
     ): RoomInfoResponse {
-        return chatRoomService.findByRoomId(roomId)
+        return chatRoomService.findByRoomId(auth.userId, roomId)
     }
 
     @GetMapping
@@ -47,4 +48,12 @@ class ChatRoomController(
         chatRoomService.createGroupChatRoom(auth.userId, request)
     }
 
+    @PostMapping("/{roomId}/read")
+    fun updateReadMessage(
+        @Login auth: LoginUser,
+        @PathVariable roomId: Long,
+        @RequestBody request: ReadMessageRequest
+    ) {
+        chatRoomService.updateReadMessage(auth.userId, roomId, request)
+    }
 }

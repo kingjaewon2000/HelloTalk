@@ -1,6 +1,6 @@
 package com.example.apiserver.domain.friend.repository
 
-import com.example.apiserver.domain.friend.dto.FriendInfoResponse
+import com.example.apiserver.domain.friend.dto.FriendInfoInitial
 import com.example.apiserver.domain.friend.entity.FriendStatus
 import com.example.core.global.model.Cursor
 
@@ -11,6 +11,6 @@ interface CustomFriendRepository {
         status: FriendStatus,
         cursor: Cursor?,
         limit: Int
-    ): MutableList<FriendInfoResponse>
+    ): MutableList<FriendInfoInitial>
 
 }

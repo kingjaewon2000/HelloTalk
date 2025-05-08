@@ -12,4 +12,6 @@ interface ChatRoomUserRepository : JpaRepository<ChatRoomUser, Long> {
 
     fun existsByRoomIdAndUserId(@Param("roomId") roomId: Long, @Param("userId") userId: Long): Boolean
 
+    fun findByUserIdAndRoomId(userId: Long, roomId: Long): ChatRoomUser?
+
 }

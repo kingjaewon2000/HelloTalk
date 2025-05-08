@@ -3,6 +3,7 @@ package com.example.core.domain.chat.repository
 import com.example.core.domain.chat.dto.RoomInfoResponse
 import com.example.core.domain.chat.entity.ChatRoom
 import com.example.core.domain.chat.entity.ChatRoomUser
+import com.example.core.domain.chat.entity.Message
 import com.example.core.global.model.Cursor
 import com.linecorp.kotlinjdsl.dsl.jpql.Jpql
 import com.linecorp.kotlinjdsl.dsl.jpql.jpql
@@ -27,10 +28,12 @@ class CustomChatRoomRepositoryImpl(
                 path(ChatRoom::id),
                 path(ChatRoom::type),
                 path(ChatRoom::name),
+                coalesce(path(Message::content), stringLiteral("메시지 없음")),
                 path(ChatRoom::lastActivityAt)
             ).from(
                 entity(ChatRoom::class),
-                innerJoin(ChatRoomUser::class).on(path(ChatRoom::id).eq(path(ChatRoomUser::roomId)))
+                innerJoin(ChatRoomUser::class).on(path(ChatRoom::id).eq(path(ChatRoomUser::roomId))),
+                leftJoin(path(ChatRoom::lastMessage))
             ).where(
                 and(
                     path(ChatRoomUser::userId).eq(userId),

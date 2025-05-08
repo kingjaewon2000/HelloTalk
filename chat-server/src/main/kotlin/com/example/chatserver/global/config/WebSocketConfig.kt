@@ -26,7 +26,6 @@ class WebSocketConfig(
     override fun configureMessageBroker(registry: MessageBrokerRegistry) {
         registry.setApplicationDestinationPrefixes("/pub")
         registry.enableSimpleBroker("/sub")
-            .setHeartbeatValue(HEARTBEAT_INTERVAL)
     }
 
 }

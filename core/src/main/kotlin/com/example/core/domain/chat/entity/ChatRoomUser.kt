@@ -20,7 +20,9 @@ class ChatRoomUser(
     @Column(nullable = false)
     val userId: Long,
 
-    val lastReadMessageId: Long? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "last_read_message_id")
+    var lastReadMessage: Message? = null,
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

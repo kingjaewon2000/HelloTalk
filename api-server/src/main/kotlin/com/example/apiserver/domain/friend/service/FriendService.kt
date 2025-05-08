@@ -1,5 +1,6 @@
 package com.example.apiserver.domain.friend.service
 
+import com.example.apiserver.domain.friend.dto.FriendInfoInitial
 import com.example.apiserver.domain.friend.dto.FriendInfoResponse
 import com.example.apiserver.domain.friend.entity.Friend
 import com.example.apiserver.domain.friend.entity.FriendStatus
@@ -8,10 +9,12 @@ import com.example.apiserver.domain.friend.repository.FriendRepository
 import com.example.apiserver.domain.user.entity.User
 import com.example.apiserver.domain.user.service.UserService
 import com.example.core.global.api.ApiCursorResponse
-import com.example.core.global.model.Cursor
-import com.example.core.global.model.Cursor.Companion.DELIMITER
+import com.example.core.global.constant.RedisConstants
 import com.example.core.global.exception.ApiException
 import com.example.core.global.exception.ErrorCode
+import com.example.core.global.model.Cursor
+import com.example.core.global.model.Cursor.Companion.DELIMITER
+import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,7 +22,8 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class FriendService(
     val friendRepository: FriendRepository,
-    val userService: UserService
+    val userService: UserService,
+    val redisTemplate: StringRedisTemplate
 ) {
 
     companion object {
@@ -39,11 +43,12 @@ class FriendService(
         val cursor = Cursor.decode(cursorId, CURSOR_KEY_SIZE)
         val response = friendRepository.findAllByFromUserId(loginUserId, status, cursor, PAGE_SIZE)
         val nextCursor = createNextCursorId(response)
+        val data = getFriendsWithOnlineStatus(response)
 
         return ApiCursorResponse(
             hasNext = nextCursor.first,
             cursorId = nextCursor.second,
-            data = response
+            data = data
         )
     }
 
@@ -97,6 +102,20 @@ class FriendService(
     /*
      * 내부 메서드
      */
+    private fun getFriendsWithOnlineStatus(response: List<FriendInfoInitial>): List<FriendInfoResponse> {
+        return response.map {
+            FriendInfoResponse(
+                friendId = it.friendId,
+                status = it.status,
+                userId = it.userId,
+                username = it.username,
+                name = it.name,
+                onlineStatus = redisTemplate.hasKey(getUserConnectionKey(it.userId.toString()))
+
+            )
+        }.toList()
+    }
+
     private fun validateStatus(status: FriendStatus) =
         when (status) {
             PENDING -> status
@@ -105,7 +124,7 @@ class FriendService(
             else -> throw ApiException(ErrorCode.UN_SUPPORTED_OPERATION)
         }
 
-    private fun createNextCursorId(friends: MutableList<FriendInfoResponse>): Pair<Boolean, String?> {
+    private fun createNextCursorId(friends: MutableList<FriendInfoInitial>): Pair<Boolean, String?> {
         if (friends.isEmpty() || friends.size <= PAGE_SIZE) return Pair(false, null)
 
         friends.removeLast()
@@ -167,4 +186,5 @@ class FriendService(
     private fun isDifferentUser(loginUserId: Long, fromUserId: Long) =
         !isSameUser(loginUserId, fromUserId)
 
+    private fun getUserConnectionKey(userId: String): String = "${RedisConstants.USER_CONNECTION_KEY}:${userId}"
 }

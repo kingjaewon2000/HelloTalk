@@ -15,6 +15,10 @@ enum class ErrorCode(val status: Int, val message: String) {
     NOT_ALLOWED_SELF_INVITATION(400, "자기 자신은 초대할 수 없습니다."),
     INVALID_GROUP_SIZE(400, "그룹 인원은 3명 이상 1000명 이하이어야 합니다."),
 
+    // 메시지 에러
+    NOT_FOUND_MESSAGE(400, "요청하신 메시지를 찾을 수 없습니다."),
+    ALREADY_READ_MESSAGE(400, "요청하신 메시지는 이미 읽은 메시지입니다."),
+
     // 공통 에러
     BAD_REQUEST(400, "잘못된 요청 파라미터입니다."),
     UN_SUPPORTED_OPERATION(400, "지원하지 않는 작업입니다."),

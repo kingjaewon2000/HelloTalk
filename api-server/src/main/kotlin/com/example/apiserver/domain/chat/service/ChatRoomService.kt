@@ -42,13 +42,14 @@ class ChatRoomService(
         private const val CURSOR_KEY_SIZE = 2
     }
 
-    fun findByRoomId(roomId: Long): RoomInfoResponse {
+    fun findByRoomId(loginUserId: Long, roomId: Long): RoomInfoResponse {
         val room = chatRoomRepository.findById(roomId).getOrNull() ?: throw ApiException(ErrorCode.CHAT_ROOM_NOT_FOUND)
 
         return RoomInfoResponse(
             roomId = room.id,
             type = room.type,
             roomName = room.name,
+            lastMessageContent = "",
             lastActivityAt = room.lastActivityAt
         )
     }

@@ -21,7 +21,7 @@ class ChatRoomController(
         @Login auth: LoginUser,
         @PathVariable roomId: Long
     ): RoomInfoResponse {
-        return chatRoomService.findByRoomId(roomId)
+        return chatRoomService.findByRoomId(auth.userId, roomId)
     }
 
     @GetMapping

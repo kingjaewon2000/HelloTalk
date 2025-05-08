@@ -7,6 +7,6 @@ data class RoomInfoResponse(
     val roomId: Long,
     val type: RoomType,
     val roomName: String,
-//    val lastMessageContent: String,
+    val lastMessageContent: String,
     val lastActivityAt: LocalDateTime,
 )

@@ -20,6 +20,10 @@ class ChatRoom(
 
     val lastActivityAt: LocalDateTime,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lsat_message_id")
+    var lastMessage: Message? = null,
+
     @CreatedDate
     @Column(nullable = false, updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()

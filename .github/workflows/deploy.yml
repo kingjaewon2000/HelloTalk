@@ -122,7 +122,6 @@ jobs:
             docker build -t $CONSUMER_IMAGE_TAG -f ./consumer-server/Dockerfile ./consumer-server
 
             echo "Starting services on Server 1 using docker-compose..."
-            docker compose -f docker-compose.yml pull 
             docker compose -f docker-compose.yml up -d --force-recreate --remove-orphans
             
             echo "Cleaning up unused Docker images..."

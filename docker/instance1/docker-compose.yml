@@ -7,7 +7,6 @@ services:
       dockerfile: Dockerfile
     image: ${API_IMAGE_TAG:-hellow-talk-api:latest}
     container_name: api_server
-    restart: unless-stopped
     expose:
       - "8080"
     environment:
@@ -15,6 +14,7 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_ROOT_PASSWORD}
       SPRING_REDIS_HOST: ${SERVER2_IP}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD}
       SPRING_REDIS_PORT: 6379
     networks:
       - app_network
@@ -25,7 +25,6 @@ services:
       dockerfile: Dockerfile
     image: ${CHAT_IMAGE_TAG:-hellow-talk-chat:latest}
     container_name: chat_server
-    restart: unless-stopped
     expose:
       - "8081"
     environment:
@@ -33,6 +32,7 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_ROOT_PASSWORD}
       SPRING_REDIS_HOST: ${SERVER2_IP}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD}
       SPRING_REDIS_PORT: 6379
     networks:
       - app_network
@@ -43,12 +43,12 @@ services:
       dockerfile: Dockerfile
     image: ${CONSUMER_IMAGE_TAG:-hellow-talk-consumer:latest}
     container_name: consumer_server
-    restart: unless-stopped
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://${SERVER2_IP}:3306/talk?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: ${DB_ROOT_PASSWORD}
       SPRING_REDIS_HOST: ${SERVER2_IP}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD}
       SPRING_REDIS_PORT: 6379
     networks:
       - app_network

@@ -53,7 +53,7 @@ jobs:
       - name: Prepare Server 2 deployment package
         run: |
           mkdir server2
-          cp ./docker/docker-compose.yml server2/docker-compose.yml
+          cp ./docker/instance2/docker-compose.yml server2/docker-compose.yml
           cp -r ./docker/init.d server2/init.d
 
       - name: Upload Server 1 deployment artifact

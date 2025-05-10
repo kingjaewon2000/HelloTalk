@@ -6,6 +6,8 @@ server:
         name: JSESSIONID
 
 spring:
+  profiles:
+    default: prod
   application:
     name: api-server
   jpa:

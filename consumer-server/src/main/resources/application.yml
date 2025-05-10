@@ -1,6 +1,8 @@
 server:
   port: 8082
 spring:
+  profiles:
+    default: prod
   application:
     name: consumer-server
   jpa:

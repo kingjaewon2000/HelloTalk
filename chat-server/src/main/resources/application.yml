@@ -9,6 +9,8 @@ server:
     max-connections: 65535
 
 spring:
+  profiles:
+    default: prod
   application:
     name: chat-server
   jpa:

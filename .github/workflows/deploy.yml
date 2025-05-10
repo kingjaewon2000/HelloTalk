@@ -104,7 +104,7 @@ jobs:
             
             echo "Setting environment variables for Server 1..."
             export GITHUB_SHA_SHORT=$(echo ${{ github.sha }} | cut -c1-8)
-            export SERVER_2_IP='${{ secrets.SERVER2_IP }}'
+            export SERVER2_IP='${{ secrets.SERVER2_IP }}'
             export DB_ROOT_PASSWORD='${{ secrets.DB_ROOT_PASSWORD }}'
             export REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}'
 

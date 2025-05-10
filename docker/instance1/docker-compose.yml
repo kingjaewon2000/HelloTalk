@@ -29,6 +29,9 @@ services:
     expose:
       - "8081"
     environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${SERVER2_IP}:3306/talk?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: ${DB_ROOT_PASSWORD}
       SPRING_REDIS_HOST: ${SERVER2_IP}
       SPRING_REDIS_PORT: 6379
     networks:

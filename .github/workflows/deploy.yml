@@ -1,0 +1,168 @@
+name: Deploy Hellow-Talk
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  APP_NAME_PREFIX: hellow-talk
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      artifact_name_s1: server1
+      artifact_name_s2: server2
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      - name: Prepare Server 1 deployment package
+        run: |
+          mkdir -p server1/api-server server1/chat-server server1/consumer-server
+          
+          # API 서버 파일 복사
+          cp api-server/build/libs/*-SNAPSHOT.jar server1/api-server/api-server.jar
+          cp ./api-server/docker/Dockerfile server1/api-server/Dockerfile
+          
+          # Chat 서버 파일 복사
+          cp chat-server/build/libs/*-SNAPSHOT.jar server1/chat-server/chat-server.jar
+          cp ./chat-server/docker/Dockerfile server1/chat-server/Dockerfile
+          
+          # Consumer 서버 파일 복사
+          cp consumer-server/build/libs/*-SNAPSHOT.jar server1/consumer-server/consumer-server.jar
+          cp ./consumer-server/docker/Dockerfile server1/consumer-server/Dockerfile
+          
+          # 공통 파일 (docker-compose, nginx 설정) 복사
+          cp ./docker/instance1/docker-compose.yml server1/docker-compose.yml
+          cp ./docker/nginx.conf server1/nginx.conf
+
+
+      - name: Prepare Server 2 deployment package
+        run: |
+          mkdir server2
+          cp ./docker/docker-compose.yml server2/docker-compose.yml
+          cp -r ./docker/init.d server2/init.d
+
+      - name: Upload Server 1 deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.artifact_name_s1 || 'server1' }}
+          path: server1/
+
+      - name: Upload Server 2 deployment artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.artifact_name_s2 || 'server2' }}
+          path: server2/
+
+  server1:
+    needs: [build, server2]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+      - name: Download Server 1 deployment artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.artifact_name_s1 || 'server1' }}
+          path: ./s1
+
+      - name: Copy files to Server 1
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER1_IP }}
+          username: ${{ secrets.SERVER1_USERNAME }}
+          key: ${{ secrets.SERVER1_PRIVATE_KEY }}
+          port: 22
+          source: "./s1/*"
+          target: "/home/ubuntu/backend"
+          strip_components: 1
+
+      - name: Build and Deploy on Server 1
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER1_IP }}
+          username: ${{ secrets.SERVER1_USERNAME }}
+          key: ${{ secrets.SERVER1_PRIVATE_KEY }}
+          port: 22
+          script: |
+            set -e 
+            cd /home/ubuntu/backend
+            
+            echo "Setting environment variables for Server 1..."
+            export GITHUB_SHA_SHORT=$(echo ${{ github.sha }} | cut -c1-8)
+            export SERVER_2_IP='${{ secrets.SERVER2_IP }}'
+            export DB_ROOT_PASSWORD='${{ secrets.DB_ROOT_PASSWORD }}'
+            export REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}'
+
+            export API_IMAGE_TAG="${{ env.APP_NAME_PREFIX }}-api:${GITHUB_SHA_SHORT}"
+            export CHAT_IMAGE_TAG="${{ env.APP_NAME_PREFIX }}-chat:${GITHUB_SHA_SHORT}"
+            export CONSUMER_IMAGE_TAG="${{ env.APP_NAME_PREFIX }}-consumer:${GITHUB_SHA_SHORT}"
+
+            echo "Building API Server image: $API_IMAGE_TAG"
+            docker build -t $API_IMAGE_TAG -f ./api-server/Dockerfile ./api-server
+            
+            echo "Building Chat Server image: $CHAT_IMAGE_TAG"
+            docker build -t $CHAT_IMAGE_TAG -f ./chat-server/Dockerfile ./chat-server
+            
+            echo "Building Consumer Server image: $CONSUMER_IMAGE_TAG"
+            docker build -t $CONSUMER_IMAGE_TAG -f ./consumer-server/Dockerfile ./consumer-server
+
+            echo "Starting services on Server 1 using docker-compose..."
+            docker compose -f docker-compose.yml pull 
+            docker compose -f docker-compose.yml up -d --force-recreate --remove-orphans
+            
+            echo "Cleaning up unused Docker images..."
+            docker image prune -af --filter "label!=keep=true"
+            
+            echo "Server 1 deployment complete."
+  server2:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+      - name: Download Server 2 deployment artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.build.outputs.artifact_name_s2 || 'server2' }}
+          path: ./s2
+
+      - name: Copy files to Server 2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER2_IP }}
+          username: ${{ secrets.SERVER2_USERNAME }}
+          key: ${{ secrets.SERVER2_PRIVATE_KEY }}
+          port: 22
+          source: "./s2/*"
+          target: "/home/ubuntu"
+          strip_components: 1
+
+      - name: Deploy/Update services on Server 2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER2_IP }}
+          username: ${{ secrets.SERVER2_USERNAME }}
+          key: ${{ secrets.SERVER2_PRIVATE_KEY }}
+          port: 22
+          script: |
+            cd /home/ubuntu
+            export DB_ROOT_PASSWORD='${{ secrets.DB_ROOT_PASSWORD }}'
+            export REDIS_PASSWORD='${{ secrets.REDIS_PASSWORD }}'
+            docker compose -f docker-compose.yml up -d --remove-orphans

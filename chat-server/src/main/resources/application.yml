@@ -5,6 +5,8 @@ server:
     session:
       cookie:
         name: JSESSIONID
+  tomcat:
+    max-connections: 65535
 
 spring:
   application:

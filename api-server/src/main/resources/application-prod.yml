@@ -5,3 +5,8 @@ spring:
   session:
     redis:
       namespace: spring:session
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST}
+      port: 6379
+      password: ${SPRING_REDIS_PASSWORD}
